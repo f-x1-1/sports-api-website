@@ -1,0 +1,2835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tano</title>
+    <link rel="icon" href="images/logo_favicon.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">    <link rel="stylesheet" href="css/style.css">
+     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+	var page=1;
+
+function getArticle(id) {
+console.log("https://content.guardianapis.com/search?id="+ id + "&show-fields=all&api-key=5057c32a-2fd6-4b4c-b722-08ce1d6a2de6&page=" + page + "&section=games");
+$.getJSON({
+            url: "https://content.guardianapis.com/"+ id + "?show-fields=all&api-key=5057c32a-2fd6-4b4c-b722-08ce1d6a2de6", 
+            error: function(xhr){console.log("An error occured: " + xhr.status + " " + xhr.statusText);},
+            success:function(data){
+              var content = data.response.content;
+			  console.log(content.fields.thumbnail);
+			  console.log(content.fields.trailText);
+			  $('#article .card-img-top').attr("src", content.fields.thumbnail);
+			  $('#article .headline').html( content.fields.headline);
+			  $('#article .trailText').html(content.fields.trailText);
+        $('#article .byline').html(content.fields.byline);
+        $('#article .bodyText').html(content.fields.body);
+			  $('#article .firstPublicationDate').html(getRelativeTime(new Date(content.fields.firstPublicationDate).getTime()));
+			  $('#article .starRating').html(content.fields.starRating);
+        $('#article .lastModified').html(getRelativeTime(new Date(content.fields.lastModified).getTime()));
+        $('#article .publication').html(content.fields.publication);
+        $('#article .productionOffice').html(content.fields.productionOffice);
+        $('#article .standfirst').html(content.fields.standfirst);
+        $('#article .shortUrl').html(content.fields.shortUrl);
+        $('#article .wordcount').html(content.fields.wordcount);
+}
+});
+$('#home').hide();
+$('#latest').hide();
+$('#popular').hide();
+$('#reviews5').hide();
+$('#reviews4').hide();
+$('#reviews3').hide();
+$('#reviews2').hide();
+$('#reviews1').hide();
+$('#article').show();
+window.scrollTo(0, 0);
+$("#latestArticle").show();
+page = 1;
+  $('#pageNo').html( page);
+  getContent("");
+}
+
+function getReviews5(pageDirection){
+if (pageDirection=="next_Review5"){
+page++;
+$('#pageNo_Review5').html( page);
+}
+if (pageDirection=="prev_Review5" && page>"1"){
+page--;
+$('#pageNo_Review5').html(page);
+}
+	        $.getJSON({
+            url: "https://content.guardianapis.com/search?page-size=16&show-fields=all&api-key=5057c32a-2fd6-4b4c-b722-08ce1d6a2de6&page=" + page + "&section=games&star-rating=5", 
+            error: function(xhr){console.log("An error occured: " + xhr.status + " " + xhr.statusText);},
+            success:function(data){
+              var results = data.response.results;
+				$('.a1 .card-img-top').attr("src", results[0].fields.thumbnail);
+				$('.a1 .headline').html( results[0].fields.headline);
+				$('.a1 .trailText').html(results[0].fields.trailText);
+				$('.a1 .firstPublicationDate').html(getRelativeTime(new Date(results[0].fields.firstPublicationDate).getTime()));
+        $('.a1').attr("data-id", results[0].id);
+				
+				$('.a2 .card-img-top').attr("src", results[1].fields.thumbnail);
+				$('.a2 .headline').html( results[1].fields.headline);
+				$('.a2 .trailText').html(results[1].fields.trailText);
+				$('.a2 .firstPublicationDate').html(getRelativeTime(new Date(results[1].fields.firstPublicationDate).getTime()));
+        $('.a2').attr("data-id", results[1].id);
+				
+				$('.a3 .card-img-top').attr("src", results[2].fields.thumbnail);
+				$('.a3 .headline').html( results[2].fields.headline);
+				$('.a3 .trailText').html(results[2].fields.trailText);
+				$('.a3 .firstPublicationDate').html(getRelativeTime(new Date(results[2].fields.firstPublicationDate).getTime()));
+        $('.a3').attr("data-id", results[2].id);
+
+        $('.a4 .card-img-top').attr("src", results[3].fields.thumbnail);
+				$('.a4 .headline').html( results[3].fields.headline);
+				$('.a4 .trailText').html(results[3].fields.trailText);
+				$('.a4 .firstPublicationDate').html(getRelativeTime(new Date(results[3].fields.firstPublicationDate).getTime()));
+        $('.a4').attr("data-id", results[3].id);
+
+        $('.a5 .card-img-top').attr("src", results[4].fields.thumbnail);
+				$('.a5 .headline').html( results[4].fields.headline);
+				$('.a5 .trailText').html(results[4].fields.trailText);
+				$('.a5 .firstPublicationDate').html(getRelativeTime(new Date(results[4].fields.firstPublicationDate).getTime()));
+        $('.a5').attr("data-id", results[4].id);
+
+        $('.a6 .card-img-top').attr("src", results[5].fields.thumbnail);
+				$('.a6 .headline').html( results[5].fields.headline);
+				$('.a6 .trailText').html(results[5].fields.trailText);
+				$('.a6 .firstPublicationDate').html(getRelativeTime(new Date(results[5].fields.firstPublicationDate).getTime()));
+        $('.a6').attr("data-id", results[5].id);
+
+        $('.a7 .card-img-top').attr("src", results[6].fields.thumbnail);
+				$('.a7 .headline').html( results[6].fields.headline);
+				$('.a7 .trailText').html(results[6].fields.trailText);
+				$('.a7 .firstPublicationDate').html(getRelativeTime(new Date(results[6].fields.firstPublicationDate).getTime()));
+        $('.a7').attr("data-id", results[6].id);
+				
+				$('.a8 .card-img-top').attr("src", results[7].fields.thumbnail);
+				$('.a8 .headline').html( results[7].fields.headline);
+				$('.a8 .trailText').html(results[7].fields.trailText);
+				$('.a8 .firstPublicationDate').html(getRelativeTime(new Date(results[7].fields.firstPublicationDate).getTime()));
+        $('.a8').attr("data-id", results[7].id);
+				
+				$('.a9 .card-img-top').attr("src", results[8].fields.thumbnail);
+				$('.a9 .headline').html( results[8].fields.headline);
+				$('.a9 .trailText').html(results[8].fields.trailText);
+				$('.a9 .firstPublicationDate').html(getRelativeTime(new Date(results[8].fields.firstPublicationDate).getTime()));
+        $('.a9').attr("data-id", results[8].id);
+
+        $('.a10 .card-img-top').attr("src", results[9].fields.thumbnail);
+				$('.a10 .headline').html( results[9].fields.headline);
+				$('.a10 .trailText').html(results[9].fields.trailText);
+				$('.a10 .firstPublicationDate').html(getRelativeTime(new Date(results[9].fields.firstPublicationDate).getTime()));
+        $('.a10').attr("data-id", results[9].id);
+
+        $('.a11 .card-img-top').attr("src", results[10].fields.thumbnail);
+				$('.a11 .headline').html( results[10].fields.headline);
+				$('.a11 .trailText').html(results[10].fields.trailText);
+				$('.a11 .firstPublicationDate').html(getRelativeTime(new Date(results[10].fields.firstPublicationDate).getTime()));
+        $('.a11').attr("data-id", results[10].id);
+
+        $('.a12 .card-img-top').attr("src", results[11].fields.thumbnail);
+				$('.a12 .headline').html( results[11].fields.headline);
+				$('.a12 .trailText').html(results[11].fields.trailText);
+				$('.a12 .firstPublicationDate').html(getRelativeTime(new Date(results[11].fields.firstPublicationDate).getTime()));
+        $('.a12').attr("data-id", results[11].id);
+
+        $('.a13 .card-img-top').attr("src", results[12].fields.thumbnail);
+				$('.a13 .headline').html( results[12].fields.headline);
+				$('.a13 .trailText').html(results[12].fields.trailText);
+				$('.a13 .firstPublicationDate').html(getRelativeTime(new Date(results[12].fields.firstPublicationDate).getTime()));
+        $('.a13').attr("data-id", results[12].id);
+
+        $('.a14 .card-img-top').attr("src", results[13].fields.thumbnail);
+				$('.a14 .headline').html( results[13].fields.headline);
+				$('.a14 .trailText').html(results[13].fields.trailText);
+				$('.a14 .firstPublicationDate').html(getRelativeTime(new Date(results[13].fields.firstPublicationDate).getTime()));
+        $('.a14').attr("data-id", results[13].id);
+
+        $('.a15 .card-img-top').attr("src", results[14].fields.thumbnail);
+				$('.a15 .headline').html( results[14].fields.headline);
+				$('.a15 .trailText').html(results[14].fields.trailText);
+				$('.a15 .firstPublicationDate').html(getRelativeTime(new Date(results[14].fields.firstPublicationDate).getTime()));
+        $('.a15').attr("data-id", results[14].id);
+
+        $('.a16 .card-img-top').attr("src", results[15].fields.thumbnail);
+				$('.a16 .headline').html( results[15].fields.headline);
+				$('.a16 .trailText').html(results[15].fields.trailText);
+				$('.a16 .firstPublicationDate').html(getRelativeTime(new Date(results[15].fields.firstPublicationDate).getTime()));
+        $('.a16').attr("data-id", results[15].id);
+            }
+			  
+           });
+		}
+
+
+    $(document).ready(function(){
+getReviews5();
+
+getReviews5("");
+$("#next_Review5").click(function(){
+ getReviews5("next_Review5");
+ 
+});
+
+$("#prev_Review5").click(function(){
+ getReviews5("prev_Review5");
+ 
+});
+
+});
+
+
+function getReviews4(pageDirection){
+if (pageDirection=="next_Review4"){
+page++;
+$('#pageNo_Review4').html( page);
+}
+if (pageDirection=="prev_Review4" && page>"1"){
+page--;
+$('#pageNo_Review4').html(page);
+}
+	        $.getJSON({
+            url: "https://content.guardianapis.com/search?page-size=16&show-fields=all&api-key=5057c32a-2fd6-4b4c-b722-08ce1d6a2de6&page=" + page + "&section=games&star-rating=4", 
+            error: function(xhr){console.log("An error occured: " + xhr.status + " " + xhr.statusText);},
+            success:function(data){
+              var results = data.response.results;
+				$('.b1 .card-img-top').attr("src", results[0].fields.thumbnail);
+				$('.b1 .headline').html( results[0].fields.headline);
+				$('.b1 .trailText').html(results[0].fields.trailText);
+				$('.b1 .firstPublicationDate').html(getRelativeTime(new Date(results[0].fields.firstPublicationDate).getTime()));
+        $('.b1').attr("data-id", results[0].id);
+				
+				$('.b2 .card-img-top').attr("src", results[1].fields.thumbnail);
+				$('.b2 .headline').html( results[1].fields.headline);
+				$('.b2 .trailText').html(results[1].fields.trailText);
+				$('.b2 .firstPublicationDate').html(getRelativeTime(new Date(results[1].fields.firstPublicationDate).getTime()));
+        $('.b2').attr("data-id", results[1].id);
+				
+				$('.b3 .card-img-top').attr("src", results[2].fields.thumbnail);
+				$('.b3 .headline').html( results[2].fields.headline);
+				$('.b3 .trailText').html(results[2].fields.trailText);
+				$('.b3 .firstPublicationDate').html(getRelativeTime(new Date(results[2].fields.firstPublicationDate).getTime()));
+        $('.b3').attr("data-id", results[2].id);
+
+        $('.b4 .card-img-top').attr("src", results[3].fields.thumbnail);
+				$('.b4 .headline').html( results[3].fields.headline);
+				$('.b4 .trailText').html(results[3].fields.trailText);
+				$('.b4 .firstPublicationDate').html(getRelativeTime(new Date(results[3].fields.firstPublicationDate).getTime()));
+        $('.b4').attr("data-id", results[3].id);
+
+        $('.b5 .card-img-top').attr("src", results[4].fields.thumbnail);
+				$('.b5 .headline').html( results[4].fields.headline);
+				$('.b5 .trailText').html(results[4].fields.trailText);
+				$('.b5 .firstPublicationDate').html(getRelativeTime(new Date(results[4].fields.firstPublicationDate).getTime()));
+        $('.b5').attr("data-id", results[4].id);
+
+        $('.b6 .card-img-top').attr("src", results[5].fields.thumbnail);
+				$('.b6 .headline').html( results[5].fields.headline);
+				$('.b6 .trailText').html(results[5].fields.trailText);
+				$('.b6 .firstPublicationDate').html(getRelativeTime(new Date(results[5].fields.firstPublicationDate).getTime()));
+        $('.b6').attr("data-id", results[5].id);
+
+        $('.b7 .card-img-top').attr("src", results[6].fields.thumbnail);
+				$('.b7 .headline').html( results[6].fields.headline);
+				$('.b7 .trailText').html(results[6].fields.trailText);
+				$('.b7 .firstPublicationDate').html(getRelativeTime(new Date(results[6].fields.firstPublicationDate).getTime()));
+        $('.b7').attr("data-id", results[6].id);
+				
+				$('.b8 .card-img-top').attr("src", results[7].fields.thumbnail);
+				$('.b8 .headline').html( results[7].fields.headline);
+				$('.b8 .trailText').html(results[7].fields.trailText);
+				$('.b8 .firstPublicationDate').html(getRelativeTime(new Date(results[7].fields.firstPublicationDate).getTime()));
+        $('.b8').attr("data-id", results[7].id);
+				
+				$('.b9 .card-img-top').attr("src", results[8].fields.thumbnail);
+				$('.b9 .headline').html( results[8].fields.headline);
+				$('.b9 .trailText').html(results[8].fields.trailText);
+				$('.b9 .firstPublicationDate').html(getRelativeTime(new Date(results[8].fields.firstPublicationDate).getTime()));
+        $('.b9').attr("data-id", results[8].id);
+
+        $('.b10 .card-img-top').attr("src", results[9].fields.thumbnail);
+				$('.b10 .headline').html( results[9].fields.headline);
+				$('.b10 .trailText').html(results[9].fields.trailText);
+				$('.b10 .firstPublicationDate').html(getRelativeTime(new Date(results[9].fields.firstPublicationDate).getTime()));
+        $('.b10').attr("data-id", results[9].id);
+
+        $('.b11 .card-img-top').attr("src", results[10].fields.thumbnail);
+				$('.b11 .headline').html( results[10].fields.headline);
+				$('.b11 .trailText').html(results[10].fields.trailText);
+				$('.b11 .firstPublicationDate').html(getRelativeTime(new Date(results[10].fields.firstPublicationDate).getTime()));
+        $('.b11').attr("data-id", results[10].id);
+
+        $('.b12 .card-img-top').attr("src", results[11].fields.thumbnail);
+				$('.b12 .headline').html( results[11].fields.headline);
+				$('.b12 .trailText').html(results[11].fields.trailText);
+				$('.b12 .firstPublicationDate').html(getRelativeTime(new Date(results[11].fields.firstPublicationDate).getTime()));
+        $('.b12').attr("data-id", results[11].id);
+
+        $('.b13 .card-img-top').attr("src", results[12].fields.thumbnail);
+				$('.b13 .headline').html( results[12].fields.headline);
+				$('.b13 .trailText').html(results[12].fields.trailText);
+				$('.b13 .firstPublicationDate').html(getRelativeTime(new Date(results[12].fields.firstPublicationDate).getTime()));
+        $('.b13').attr("data-id", results[12].id);
+
+        $('.b14 .card-img-top').attr("src", results[13].fields.thumbnail);
+				$('.b14 .headline').html( results[13].fields.headline);
+				$('.b14 .trailText').html(results[13].fields.trailText);
+				$('.b14 .firstPublicationDate').html(getRelativeTime(new Date(results[13].fields.firstPublicationDate).getTime()));
+        $('.b14').attr("data-id", results[13].id);
+
+        $('.b15 .card-img-top').attr("src", results[14].fields.thumbnail);
+				$('.b15 .headline').html( results[14].fields.headline);
+				$('.b15 .trailText').html(results[14].fields.trailText);
+				$('.b15 .firstPublicationDate').html(getRelativeTime(new Date(results[14].fields.firstPublicationDate).getTime()));
+        $('.b15').attr("data-id", results[14].id);
+
+        $('.b16 .card-img-top').attr("src", results[15].fields.thumbnail);
+				$('.b16 .headline').html( results[15].fields.headline);
+				$('.b16 .trailText').html(results[15].fields.trailText);
+				$('.b16 .firstPublicationDate').html(getRelativeTime(new Date(results[15].fields.firstPublicationDate).getTime()));
+        $('.b16').attr("data-id", results[15].id);
+            }
+			  
+           });
+		}
+
+
+    $(document).ready(function(){
+getReviews4();
+
+getReviews4("");
+$("#next_Review4").click(function(){
+ getReviews4("next_Review4");
+ 
+});
+
+$("#prev_Review4").click(function(){
+ getReviews4("prev_Review4");
+ 
+});
+
+});
+
+
+
+function getReviews3(pageDirection){
+if (pageDirection=="next_Review3"){
+page++;
+$('#pageNo_Review3').html( page);
+}
+if (pageDirection=="prev_Review3" && page>"1"){
+page--;
+$('#pageNo_Review3').html(page);
+}
+	        $.getJSON({
+            url: "https://content.guardianapis.com/search?page-size=16&show-fields=all&api-key=5057c32a-2fd6-4b4c-b722-08ce1d6a2de6&page=" + page + "&section=games&star-rating=3", 
+            error: function(xhr){console.log("An error occured: " + xhr.status + " " + xhr.statusText);},
+            success:function(data){
+              var results = data.response.results;
+				$('.d1 .card-img-top').attr("src", results[0].fields.thumbnail);
+				$('.d1 .headline').html( results[0].fields.headline);
+				$('.d1 .trailText').html(results[0].fields.trailText);
+				$('.d1 .firstPublicationDate').html(getRelativeTime(new Date(results[0].fields.firstPublicationDate).getTime()));
+        $('.d1').attr("data-id", results[0].id);
+				
+				$('.d2 .card-img-top').attr("src", results[1].fields.thumbnail);
+				$('.d2 .headline').html( results[1].fields.headline);
+				$('.d2 .trailText').html(results[1].fields.trailText);
+				$('.d2 .firstPublicationDate').html(getRelativeTime(new Date(results[1].fields.firstPublicationDate).getTime()));
+        $('.d2').attr("data-id", results[1].id);
+				
+				$('.d3 .card-img-top').attr("src", results[2].fields.thumbnail);
+				$('.d3 .headline').html( results[2].fields.headline);
+				$('.d3 .trailText').html(results[2].fields.trailText);
+				$('.d3 .firstPublicationDate').html(getRelativeTime(new Date(results[2].fields.firstPublicationDate).getTime()));
+        $('.d3').attr("data-id", results[2].id);
+
+        $('.d4 .card-img-top').attr("src", results[3].fields.thumbnail);
+				$('.d4 .headline').html( results[3].fields.headline);
+				$('.d4 .trailText').html(results[3].fields.trailText);
+				$('.d4 .firstPublicationDate').html(getRelativeTime(new Date(results[3].fields.firstPublicationDate).getTime()));
+        $('.d4').attr("data-id", results[3].id);
+
+        $('.d5 .card-img-top').attr("src", results[4].fields.thumbnail);
+				$('.d5 .headline').html( results[4].fields.headline);
+				$('.d5 .trailText').html(results[4].fields.trailText);
+				$('.d5 .firstPublicationDate').html(getRelativeTime(new Date(results[4].fields.firstPublicationDate).getTime()));
+        $('.d5').attr("data-id", results[4].id);
+
+        $('.d6 .card-img-top').attr("src", results[5].fields.thumbnail);
+				$('.d6 .headline').html( results[5].fields.headline);
+				$('.d6 .trailText').html(results[5].fields.trailText);
+				$('.d6 .firstPublicationDate').html(getRelativeTime(new Date(results[5].fields.firstPublicationDate).getTime()));
+        $('.d6').attr("data-id", results[5].id);
+
+        $('.d7 .card-img-top').attr("src", results[6].fields.thumbnail);
+				$('.d7 .headline').html( results[6].fields.headline);
+				$('.d7 .trailText').html(results[6].fields.trailText);
+				$('.d7 .firstPublicationDate').html(getRelativeTime(new Date(results[6].fields.firstPublicationDate).getTime()));
+        $('.d7').attr("data-id", results[6].id);
+				
+				$('.d8 .card-img-top').attr("src", results[7].fields.thumbnail);
+				$('.d8 .headline').html( results[7].fields.headline);
+				$('.d8 .trailText').html(results[7].fields.trailText);
+				$('.d8 .firstPublicationDate').html(getRelativeTime(new Date(results[7].fields.firstPublicationDate).getTime()));
+        $('.d8').attr("data-id", results[7].id);
+				
+				$('.d9 .card-img-top').attr("src", results[8].fields.thumbnail);
+				$('.d9 .headline').html( results[8].fields.headline);
+				$('.d9 .trailText').html(results[8].fields.trailText);
+				$('.d9 .firstPublicationDate').html(getRelativeTime(new Date(results[8].fields.firstPublicationDate).getTime()));
+        $('.d9').attr("data-id", results[8].id);
+
+        $('.d10 .card-img-top').attr("src", results[9].fields.thumbnail);
+				$('.d10 .headline').html( results[9].fields.headline);
+				$('.d10 .trailText').html(results[9].fields.trailText);
+				$('.d10 .firstPublicationDate').html(getRelativeTime(new Date(results[9].fields.firstPublicationDate).getTime()));
+        $('.d10').attr("data-id", results[9].id);
+
+        $('.d11 .card-img-top').attr("src", results[10].fields.thumbnail);
+				$('.d11 .headline').html( results[10].fields.headline);
+				$('.d11 .trailText').html(results[10].fields.trailText);
+				$('.d11 .firstPublicationDate').html(getRelativeTime(new Date(results[10].fields.firstPublicationDate).getTime()));
+        $('.d11').attr("data-id", results[10].id);
+
+        $('.d12 .card-img-top').attr("src", results[11].fields.thumbnail);
+				$('.d12 .headline').html( results[11].fields.headline);
+				$('.d12 .trailText').html(results[11].fields.trailText);
+				$('.d12 .firstPublicationDate').html(getRelativeTime(new Date(results[11].fields.firstPublicationDate).getTime()));
+        $('.d12').attr("data-id", results[11].id);
+
+        $('.d13 .card-img-top').attr("src", results[12].fields.thumbnail);
+				$('.d13 .headline').html( results[12].fields.headline);
+				$('.d13 .trailText').html(results[12].fields.trailText);
+				$('.d13 .firstPublicationDate').html(getRelativeTime(new Date(results[12].fields.firstPublicationDate).getTime()));
+        $('.d13').attr("data-id", results[12].id);
+
+        $('.d14 .card-img-top').attr("src", results[13].fields.thumbnail);
+				$('.d14 .headline').html( results[13].fields.headline);
+				$('.d14 .trailText').html(results[13].fields.trailText);
+				$('.d14 .firstPublicationDate').html(getRelativeTime(new Date(results[13].fields.firstPublicationDate).getTime()));
+        $('.d14').attr("data-id", results[13].id);
+
+        $('.d15 .card-img-top').attr("src", results[14].fields.thumbnail);
+				$('.d15 .headline').html( results[14].fields.headline);
+				$('.d15 .trailText').html(results[14].fields.trailText);
+				$('.d15 .firstPublicationDate').html(getRelativeTime(new Date(results[14].fields.firstPublicationDate).getTime()));
+        $('.d15').attr("data-id", results[14].id);
+
+        $('.d16 .card-img-top').attr("src", results[15].fields.thumbnail);
+				$('.d16 .headline').html( results[15].fields.headline);
+				$('.d16 .trailText').html(results[15].fields.trailText);
+				$('.d16 .firstPublicationDate').html(getRelativeTime(new Date(results[15].fields.firstPublicationDate).getTime()));
+        $('.d16').attr("data-id", results[15].id);
+            }
+			  
+           });
+		}
+
+
+    $(document).ready(function(){
+getReviews3();
+
+getReviews3("");
+$("#next_Review3").click(function(){
+ getReviews3("next_Review3");
+ 
+});
+
+$("#prev_Review3").click(function(){
+ getReviews3("prev_Review3");
+ 
+});
+
+});
+
+function getReviews2(pageDirection){
+if (pageDirection=="next_Review2"){
+page++;
+$('#pageNo_Review2').html( page);
+}
+if (pageDirection=="prev_Review2" && page>"1"){
+page--;
+$('#pageNo_Review2').html(page);
+}
+	        $.getJSON({
+            url: "https://content.guardianapis.com/search?page-size=16&show-fields=all&api-key=5057c32a-2fd6-4b4c-b722-08ce1d6a2de6&page=" + page + "&section=games&star-rating=2", 
+            error: function(xhr){console.log("An error occured: " + xhr.status + " " + xhr.statusText);},
+            success:function(data){
+              var results = data.response.results;
+				$('.e1 .card-img-top').attr("src", results[0].fields.thumbnail);
+				$('.e1 .headline').html( results[0].fields.headline);
+				$('.e1 .trailText').html(results[0].fields.trailText);
+				$('.e1 .firstPublicationDate').html(getRelativeTime(new Date(results[0].fields.firstPublicationDate).getTime()));
+        $('.e1').attr("data-id", results[0].id);
+				
+				$('.e2 .card-img-top').attr("src", results[1].fields.thumbnail);
+				$('.e2 .headline').html( results[1].fields.headline);
+				$('.e2 .trailText').html(results[1].fields.trailText);
+				$('.e2 .firstPublicationDate').html(getRelativeTime(new Date(results[1].fields.firstPublicationDate).getTime()));
+        $('.e2').attr("data-id", results[1].id);
+				
+				$('.e3 .card-img-top').attr("src", results[2].fields.thumbnail);
+				$('.e3 .headline').html( results[2].fields.headline);
+				$('.e3 .trailText').html(results[2].fields.trailText);
+				$('.e3 .firstPublicationDate').html(getRelativeTime(new Date(results[2].fields.firstPublicationDate).getTime()));
+        $('.e3').attr("data-id", results[2].id);
+
+        $('.e4 .card-img-top').attr("src", results[3].fields.thumbnail);
+				$('.e4 .headline').html( results[3].fields.headline);
+				$('.e4 .trailText').html(results[3].fields.trailText);
+				$('.e4 .firstPublicationDate').html(getRelativeTime(new Date(results[3].fields.firstPublicationDate).getTime()));
+        $('.e4').attr("data-id", results[3].id);
+
+        $('.e5 .card-img-top').attr("src", results[4].fields.thumbnail);
+				$('.e5 .headline').html( results[4].fields.headline);
+				$('.e5 .trailText').html(results[4].fields.trailText);
+				$('.e5 .firstPublicationDate').html(getRelativeTime(new Date(results[4].fields.firstPublicationDate).getTime()));
+        $('.e5').attr("data-id", results[4].id);
+
+        $('.e6 .card-img-top').attr("src", results[5].fields.thumbnail);
+				$('.e6 .headline').html( results[5].fields.headline);
+				$('.e6 .trailText').html(results[5].fields.trailText);
+				$('.e6 .firstPublicationDate').html(getRelativeTime(new Date(results[5].fields.firstPublicationDate).getTime()));
+        $('.e6').attr("data-id", results[5].id);
+
+        $('.e7 .card-img-top').attr("src", results[6].fields.thumbnail);
+				$('.e7 .headline').html( results[6].fields.headline);
+				$('.e7 .trailText').html(results[6].fields.trailText);
+				$('.e7 .firstPublicationDate').html(getRelativeTime(new Date(results[6].fields.firstPublicationDate).getTime()));
+        $('.e7').attr("data-id", results[6].id);
+				
+				$('.e8 .card-img-top').attr("src", results[7].fields.thumbnail);
+				$('.e8 .headline').html( results[7].fields.headline);
+				$('.e8 .trailText').html(results[7].fields.trailText);
+				$('.e8 .firstPublicationDate').html(getRelativeTime(new Date(results[7].fields.firstPublicationDate).getTime()));
+        $('.e8').attr("data-id", results[7].id);
+				
+				$('.e9 .card-img-top').attr("src", results[8].fields.thumbnail);
+				$('.e9 .headline').html( results[8].fields.headline);
+				$('.e9 .trailText').html(results[8].fields.trailText);
+				$('.e9 .firstPublicationDate').html(getRelativeTime(new Date(results[8].fields.firstPublicationDate).getTime()));
+        $('.e9').attr("data-id", results[8].id);
+
+        $('.e10 .card-img-top').attr("src", results[9].fields.thumbnail);
+				$('.e10 .headline').html( results[9].fields.headline);
+				$('.e10 .trailText').html(results[9].fields.trailText);
+				$('.e10 .firstPublicationDate').html(getRelativeTime(new Date(results[9].fields.firstPublicationDate).getTime()));
+        $('.e10').attr("data-id", results[9].id);
+
+        $('.e11 .card-img-top').attr("src", results[10].fields.thumbnail);
+				$('.e11 .headline').html( results[10].fields.headline);
+				$('.e11 .trailText').html(results[10].fields.trailText);
+				$('.e11 .firstPublicationDate').html(getRelativeTime(new Date(results[10].fields.firstPublicationDate).getTime()));
+        $('.e11').attr("data-id", results[10].id);
+
+        $('.e12 .card-img-top').attr("src", results[11].fields.thumbnail);
+				$('.e12 .headline').html( results[11].fields.headline);
+				$('.e12 .trailText').html(results[11].fields.trailText);
+				$('.e12 .firstPublicationDate').html(getRelativeTime(new Date(results[11].fields.firstPublicationDate).getTime()));
+        $('.e12').attr("data-id", results[11].id);
+
+        $('.e13 .card-img-top').attr("src", results[12].fields.thumbnail);
+				$('.e13 .headline').html( results[12].fields.headline);
+				$('.e13 .trailText').html(results[12].fields.trailText);
+				$('.e13 .firstPublicationDate').html(getRelativeTime(new Date(results[12].fields.firstPublicationDate).getTime()));
+        $('.e13').attr("data-id", results[12].id);
+
+        $('.e14 .card-img-top').attr("src", results[13].fields.thumbnail);
+				$('.e14 .headline').html( results[13].fields.headline);
+				$('.e14 .trailText').html(results[13].fields.trailText);
+				$('.e14 .firstPublicationDate').html(getRelativeTime(new Date(results[13].fields.firstPublicationDate).getTime()));
+        $('.e14').attr("data-id", results[13].id);
+
+        $('.e15 .card-img-top').attr("src", results[14].fields.thumbnail);
+				$('.e15 .headline').html( results[14].fields.headline);
+				$('.e15 .trailText').html(results[14].fields.trailText);
+				$('.e15 .firstPublicationDate').html(getRelativeTime(new Date(results[14].fields.firstPublicationDate).getTime()));
+        $('.e15').attr("data-id", results[14].id);
+
+        $('.e16 .card-img-top').attr("src", results[15].fields.thumbnail);
+				$('.e16 .headline').html( results[15].fields.headline);
+				$('.e16 .trailText').html(results[15].fields.trailText);
+				$('.e16 .firstPublicationDate').html(getRelativeTime(new Date(results[15].fields.firstPublicationDate).getTime()));
+        $('.e16').attr("data-id", results[15].id);
+            }
+			  
+           });
+		}
+
+
+    $(document).ready(function(){
+getReviews2();
+
+getReviews2("");
+$("#next_Review2").click(function(){
+ getReviews2("next_Review2");
+ 
+});
+
+$("#prev_Review2").click(function(){
+ getReviews2("prev_Review2");
+ 
+});
+
+});
+
+
+function getReviews1(pageDirection){
+if (pageDirection=="next_Review1"){
+page++;
+$('#pageNo_Review1').html( page);
+}
+if (pageDirection=="prev_Review1" && page>"1"){
+page--;
+$('#pageNo_Review1').html(page);
+}
+	        $.getJSON({
+            url: "https://content.guardianapis.com/search?page-size=16&show-fields=all&api-key=5057c32a-2fd6-4b4c-b722-08ce1d6a2de6&page=" + page + "&section=games&star-rating=1", 
+            error: function(xhr){console.log("An error occured: " + xhr.status + " " + xhr.statusText);},
+            success:function(data){
+              var results = data.response.results;
+				$('.f1 .card-img-top').attr("src", results[0].fields.thumbnail);
+				$('.f1 .headline').html( results[0].fields.headline);
+				$('.f1 .trailText').html(results[0].fields.trailText);
+				$('.f1 .firstPublicationDate').html(getRelativeTime(new Date(results[0].fields.firstPublicationDate).getTime()));
+        $('.f1').attr("data-id", results[0].id);
+				
+				$('.f2 .card-img-top').attr("src", results[1].fields.thumbnail);
+				$('.f2 .headline').html( results[1].fields.headline);
+				$('.f2 .trailText').html(results[1].fields.trailText);
+				$('.f2 .firstPublicationDate').html(getRelativeTime(new Date(results[1].fields.firstPublicationDate).getTime()));
+        $('.f2').attr("data-id", results[1].id);
+				
+				$('.f3 .card-img-top').attr("src", results[2].fields.thumbnail);
+				$('.f3 .headline').html( results[2].fields.headline);
+				$('.f3 .trailText').html(results[2].fields.trailText);
+				$('.f3 .firstPublicationDate').html(getRelativeTime(new Date(results[2].fields.firstPublicationDate).getTime()));
+        $('.f3').attr("data-id", results[2].id);
+
+        $('.f4 .card-img-top').attr("src", results[3].fields.thumbnail);
+				$('.f4 .headline').html( results[3].fields.headline);
+				$('.f4 .trailText').html(results[3].fields.trailText);
+				$('.f4 .firstPublicationDate').html(getRelativeTime(new Date(results[3].fields.firstPublicationDate).getTime()));
+        $('.f4').attr("data-id", results[3].id);
+
+        $('.f5 .card-img-top').attr("src", results[4].fields.thumbnail);
+				$('.f5 .headline').html( results[4].fields.headline);
+				$('.f5 .trailText').html(results[4].fields.trailText);
+				$('.f5 .firstPublicationDate').html(getRelativeTime(new Date(results[4].fields.firstPublicationDate).getTime()));
+        $('.f5').attr("data-id", results[4].id);
+
+        $('.f6 .card-img-top').attr("src", results[5].fields.thumbnail);
+				$('.f6 .headline').html( results[5].fields.headline);
+				$('.f6 .trailText').html(results[5].fields.trailText);
+				$('.f6 .firstPublicationDate').html(getRelativeTime(new Date(results[5].fields.firstPublicationDate).getTime()));
+        $('.f6').attr("data-id", results[5].id);
+            }
+			  
+           });
+		}
+
+
+    $(document).ready(function(){
+getReviews1();
+
+
+});
+
+
+
+function getContent(pageDirection){
+if (pageDirection=="next"){
+page++;
+$('#pageNo').html(page);
+}
+if (pageDirection=="prev" && page>"1"){
+page--;
+$('#pageNo').html(page);
+}
+	        $.getJSON({
+            url: "https://content.guardianapis.com/search?page-size=16&show-fields=all&api-key=5057c32a-2fd6-4b4c-b722-08ce1d6a2de6&page=" + page + "&section=games", 
+            error: function(xhr){console.log("An error occured: " + xhr.status + " " + xhr.statusText);},
+            success:function(data){
+              var results = data.response.results;
+				$('.c1 .card-img-top').attr("src", results[0].fields.thumbnail);
+				$('.c1 .headline').html( results[0].fields.headline);
+				$('.c1 .trailText').html(results[0].fields.trailText);
+				$('.c1 .firstPublicationDate').html(getRelativeTime(new Date(results[0].fields.firstPublicationDate).getTime()));
+        $('.c1').attr("data-id", results[0].id);
+				
+				$('.c2 .card-img-top').attr("src", results[1].fields.thumbnail);
+				$('.c2 .headline').html( results[1].fields.headline);
+				$('.c2 .trailText').html(results[1].fields.trailText);
+				$('.c2 .firstPublicationDate').html(getRelativeTime(new Date(results[1].fields.firstPublicationDate).getTime()));
+        $('.c2').attr("data-id", results[1].id);
+				
+				$('.c3 .card-img-top').attr("src", results[2].fields.thumbnail);
+				$('.c3 .headline').html( results[2].fields.headline);
+				$('.c3 .trailText').html(results[2].fields.trailText);
+				$('.c3 .firstPublicationDate').html(getRelativeTime(new Date(results[2].fields.firstPublicationDate).getTime()));
+        $('.c3').attr("data-id", results[2].id);
+
+        $('.c4 .card-img-top').attr("src", results[3].fields.thumbnail);
+				$('.c4 .headline').html( results[3].fields.headline);
+				$('.c4 .trailText').html(results[3].fields.trailText);
+				$('.c4 .firstPublicationDate').html(getRelativeTime(new Date(results[3].fields.firstPublicationDate).getTime()));
+        $('.c4').attr("data-id", results[3].id);
+
+        $('.c5 .card-img-top').attr("src", results[4].fields.thumbnail);
+				$('.c5 .headline').html( results[4].fields.headline);
+				$('.c5 .trailText').html(results[4].fields.trailText);
+				$('.c5 .firstPublicationDate').html(getRelativeTime(new Date(results[4].fields.firstPublicationDate).getTime()));
+        $('.c5').attr("data-id", results[4].id);
+
+        $('.c6 .card-img-top').attr("src", results[5].fields.thumbnail);
+				$('.c6 .headline').html( results[5].fields.headline);
+				$('.c6 .trailText').html(results[5].fields.trailText);
+				$('.c6 .firstPublicationDate').html(getRelativeTime(new Date(results[5].fields.firstPublicationDate).getTime()));
+        $('.c6').attr("data-id", results[5].id);
+
+        $('.c7 .card-img-top').attr("src", results[6].fields.thumbnail);
+				$('.c7 .headline').html( results[6].fields.headline);
+				$('.c7 .trailText').html(results[6].fields.trailText);
+				$('.c7 .firstPublicationDate').html(getRelativeTime(new Date(results[6].fields.firstPublicationDate).getTime()));
+        $('.c7').attr("data-id", results[6].id);
+				
+				$('.c8 .card-img-top').attr("src", results[7].fields.thumbnail);
+				$('.c8 .headline').html( results[7].fields.headline);
+				$('.c8 .trailText').html(results[7].fields.trailText);
+				$('.c8 .firstPublicationDate').html(getRelativeTime(new Date(results[7].fields.firstPublicationDate).getTime()));
+        $('.c8').attr("data-id", results[7].id);
+				
+				$('.c9 .card-img-top').attr("src", results[8].fields.thumbnail);
+				$('.c9 .headline').html( results[8].fields.headline);
+				$('.c9 .trailText').html(results[8].fields.trailText);
+				$('.c9 .firstPublicationDate').html(getRelativeTime(new Date(results[8].fields.firstPublicationDate).getTime()));
+        $('.c9').attr("data-id", results[8].id);
+
+        $('.c10 .card-img-top').attr("src", results[9].fields.thumbnail);
+				$('.c10 .headline').html( results[9].fields.headline);
+				$('.c10 .trailText').html(results[9].fields.trailText);
+				$('.c10 .firstPublicationDate').html(getRelativeTime(new Date(results[9].fields.firstPublicationDate).getTime()));
+        $('.c10').attr("data-id", results[9].id);
+
+        $('.c11 .card-img-top').attr("src", results[10].fields.thumbnail);
+				$('.c11 .headline').html( results[10].fields.headline);
+				$('.c11 .trailText').html(results[10].fields.trailText);
+				$('.c11 .firstPublicationDate').html(getRelativeTime(new Date(results[10].fields.firstPublicationDate).getTime()));
+        $('.c11').attr("data-id", results[10].id);
+
+        $('.c12 .card-img-top').attr("src", results[11].fields.thumbnail);
+				$('.c12 .headline').html( results[11].fields.headline);
+				$('.c12 .trailText').html(results[11].fields.trailText);
+				$('.c12 .firstPublicationDate').html(getRelativeTime(new Date(results[11].fields.firstPublicationDate).getTime()));
+        $('.c12').attr("data-id", results[11].id);
+
+        $('.c13 .card-img-top').attr("src", results[12].fields.thumbnail);
+				$('.c13 .headline').html( results[12].fields.headline);
+				$('.c13 .trailText').html(results[12].fields.trailText);
+				$('.c13 .firstPublicationDate').html(getRelativeTime(new Date(results[12].fields.firstPublicationDate).getTime()));
+        $('.c13').attr("data-id", results[12].id);
+
+        $('.c14 .card-img-top').attr("src", results[13].fields.thumbnail);
+				$('.c14 .headline').html( results[13].fields.headline);
+				$('.c14 .trailText').html(results[13].fields.trailText);
+				$('.c14 .firstPublicationDate').html(getRelativeTime(new Date(results[13].fields.firstPublicationDate).getTime()));
+        $('.c14').attr("data-id", results[13].id);
+
+        $('.c15 .card-img-top').attr("src", results[14].fields.thumbnail);
+				$('.c15 .headline').html( results[14].fields.headline);
+				$('.c15 .trailText').html(results[14].fields.trailText);
+				$('.c15 .firstPublicationDate').html(getRelativeTime(new Date(results[14].fields.firstPublicationDate).getTime()));
+        $('.c15').attr("data-id", results[14].id);
+
+        $('.c16 .card-img-top').attr("src", results[15].fields.thumbnail);
+				$('.c16 .headline').html( results[15].fields.headline);
+				$('.c16 .trailText').html(results[15].fields.trailText);
+				$('.c16 .firstPublicationDate').html(getRelativeTime(new Date(results[15].fields.firstPublicationDate).getTime()));
+        $('.c16').attr("data-id", results[15].id);
+            }
+			  
+           });
+		}
+		
+$(document).ready(function(){
+getContent();
+
+getContent("");
+$("#next").click(function(){
+ getContent("next");
+ 
+});
+
+$("#prev").click(function(){
+ getContent("prev");
+ 
+});
+
+$('.card').click(function() {
+getArticle(this.getAttribute("data-id"));
+console.log(this.getAttribute("data-id"));
+});
+
+$(".navHome").click(function(){
+  $("#latest").hide();
+  $("#reviews5").hide();
+  $("#reviews4").hide();
+  $("#reviews3").hide();
+  $("#reviews2").hide();
+  $("#reviews1").hide();
+  $("#article").hide();
+  $("#latestArticle").hide();
+  $("#home").show();
+  page = 1;
+});
+
+
+$(".navLatest").click(function(){
+  $("#home").hide()
+  $("#reviews5").hide();
+  $("#reviews4").hide();
+  $("#reviews3").hide();
+  $("#reviews2").hide();
+  $("#reviews1").hide();
+  $("#article").hide();
+  $("#latestArticle").hide();
+  $("#latest").show();
+  page = 1;
+  $('#pageNo').html( page);
+  getContent("");
+});
+
+$(".navReviews5").click(function(){
+  $("#home").hide();
+  $("#latest").hide();
+  $("#popular").hide();
+  $("#article").hide();
+  $("#latestArticle").hide();
+  $("#reviews5").show();
+  $("#reviews4").hide();
+  $("#reviews3").hide();
+  $("#reviews2").hide();
+  $("#reviews1").hide();
+  page = 1;
+});
+
+
+$(".navReviews4").click(function(){
+  $("#home").hide();
+  $("#latest").hide();
+  $("#popular").hide();
+  $("#article").hide();
+  $("#latestArticle").hide();
+  $("#reviews5").hide();
+  $("#reviews4").show();
+  $("#reviews3").hide();
+  $("#reviews2").hide();
+  $("#reviews1").hide();
+  page = 1;
+});
+
+$(".navReviews3").click(function(){
+  $("#home").hide();
+  $("#latest").hide();
+  $("#popular").hide();
+  $("#article").hide();
+  $("#latestArticle").hide();
+  $("#reviews5").hide();
+  $("#reviews4").hide();
+  $("#reviews3").show();
+  $("#reviews2").hide();
+  $("#reviews1").hide();
+  page = 1;
+});
+
+$(".navReviews2").click(function(){
+  $("#home").hide();
+  $("#latest").hide();
+  $("#popular").hide();
+  $("#article").hide();
+  $("#latestArticle").hide();
+  $("#reviews5").hide();
+  $("#reviews4").hide();
+  $("#reviews3").hide();
+  $("#reviews2").show();
+  $("#reviews1").hide();
+  page = 1;
+});
+
+$(".navReviews1").click(function(){
+  $("#home").hide();
+  $("#latest").hide();
+  $("#popular").hide();
+  $("#article").hide();
+  $("#latestArticle").hide();
+  $("#reviews5").hide();
+  $("#reviews4").hide();
+  $("#reviews3").hide();
+  $("#reviews2").hide();
+  $("#reviews1").show();
+  page = 1;
+});
+
+
+});
+
+
+/*
+function relativeDays(timestamp) {
+      const rtf = new Intl.RelativeTimeFormat('en', {numeric: 'auto',});
+      const oneDayInMs = 1000 * 60 * 60 * 24;
+      const daysDifference = Math.round(
+        (timestamp - new Date().getTime()) / oneDayInMs,
+      );
+   
+      return rtf.format(daysDifference, 'day');
+    }
+*/
+
+
+
+// in miliseconds
+var units = {
+  year  : 24 * 60 * 60 * 1000 * 365,
+  month : 24 * 60 * 60 * 1000 * 365/12,
+  day   : 24 * 60 * 60 * 1000,
+  hour  : 60 * 60 * 1000,
+  minute: 60 * 1000,
+  second: 1000
+}
+
+var rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' })
+
+var getRelativeTime = (d1, d2 = new Date()) => {
+  var elapsed = d1 - d2
+
+  // "Math.abs" accounts for both "past" & "future" scenarios
+  for (var u in units) 
+    if (Math.abs(elapsed) > units[u] || u == 'second') 
+      return rtf.format(Math.round(elapsed/units[u]), u)
+}
+
+
+
+
+    
+
+    $(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#searchBar *").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+
+
+
+
+function changeImage()
+{
+var img = document.getElementById("image");
+img.src="images/logo_black.png";
+return false;
+}
+
+function changeImage2()
+{
+var img = document.getElementById("image");
+img.src="images/logo_white.png";
+return false;
+}
+
+
+    </script>
+
+</head>
+
+
+
+<body>
+
+<div class="header">
+  <div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3  ms-lg-3">
+      <a href="index.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <img class="bi me-2" id="image" name="logo" width="87" height="32" role="img" src="images/logo_white.png" ></img>
+      </a>
+  
+      <ul class="nav nav-pills">
+        <li><a href="#" class="nav-link navHome">Home</a></li>
+        <li><a href="#" class="nav-link navLatest">Latest News</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Reviews
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item navReviews5" href="#">5 Star Ratings</a></li>
+            <li><a class="dropdown-item navReviews4" href="#">4 Star Ratings</a></li>
+            <li><a class="dropdown-item navReviews3" href="#">3 Star Ratings</a></li>
+            <li><a class="dropdown-item navReviews2" href="#">2 Star Ratings</a></li>
+            <li><a class="dropdown-item navReviews1" href="#">1 Star Ratings</a></li>
+          </ul>
+        </li>
+      </ul>
+      
+      
+      <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+          <input type="search" id="myInput" class="form-control s_background" placeholder="Search..." aria-label="Search" >
+        </form>
+        
+  </div>
+  
+</header>
+</div>
+
+
+
+<div class="container pageColour">
+
+<br><br>
+
+<div id="home">
+
+<div class="container trendingColour">
+  <div class="headline">
+<h2>Trending</h2>
+</div>
+</div>
+
+<div class="container">
+<hr class="featurette-divider">
+</div>
+
+<br>
+
+<div class="container">
+  <div class="row g-3">
+    <div class="col-12 col-md-6 col-lg-8" >
+      <div class="card-deck">
+        <div class="card c1 lCard">
+          <img class="card-img-top" src="..." alt="Card image cap">
+          <div class="card-body ">
+            <h3 class="card-title headline">Card title</h3>
+            <p class="card-text trailText ">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+          </div>
+          <div class="card-footer firstPublicationDate">
+            <small class="text-muted">Last updated 3 mins ago</small>
+          </div>
+        </div>
+      </div>
+      </div>
+<div class="col-12 col-md-6 col-lg-4" >
+  <div class="card-deck">
+    <div class="card c2 mCard">
+      <img class="card-img-top" src="..." alt="Card image cap">
+      <div class="card-body ">
+        <h5 class="card-title headline textShort">Card title</h5>
+        <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      </div>
+      <div class="card-footer firstPublicationDate">
+        <small class="text-muted">Last updated 3 mins ago</small>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<br>
+
+<div class="">
+  <div class="trendingColour">
+<h4>Latest News</h4>
+</div>
+</div>
+
+<div class="">
+  <hr class="featurette-divider">
+  </div>
+
+  <br>
+
+<div class="">
+  <div class="row g-4">
+<div class="col-12 col-md-6 col-lg-3" >
+  <div class="card-deck">
+    <div class="card c3 sCard">
+      <img class="card-img-top" src="..." alt="Card image cap">
+      <div class="card-body ">
+        <h5 class="card-title headline textShort">Card title</h5>
+        <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      </div>
+      <div class="card-footer firstPublicationDate">
+        <small class="text-muted">Last updated 3 mins ago</small>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-3" >
+    <div class="card-deck">
+      <div class="card c4 sCard">
+        <img class="card-img-top" src="..." alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title headline textShort">Card title</h5>
+          <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+        </div>
+        <div class="card-footer firstPublicationDate">
+          <small class="text-muted">Last updated 3 mins ago</small>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-3" >
+      <div class="card-deck">
+        <div class="card c5 sCard">
+          <img class="card-img-top" src="..." alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title headline textShort">Card title</h5>
+            <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+          </div>
+          <div class="card-footer firstPublicationDate">
+            <small class="text-muted">Last updated 3 mins ago</small>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-3" >
+        <div class="card-deck">
+          <div class="card c6 sCard">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title headline textShort">Card title</h5>
+              <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            </div>
+            <div class="card-footer firstPublicationDate">
+              <small class="text-muted">Last updated 3 mins ago</small>
+            </div>
+          </div>
+        </div>
+        </div>
+</div>
+</div>
+
+
+</div>
+
+<br>
+
+<div class="container">
+  <div class="row">
+    <div class="col text-center navLatest">
+      <a href="#latest" class="showMore px-2 ">Show More</a>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div id="latest" style="display:none">
+
+  <div class="container trendingColour">
+  <h2>Latest News</h2>
+  </div>
+  
+  <div class="container">
+  <hr class="featurette-divider">
+  </div>
+
+  <br>
+
+  <div class="container" id="searchBar">
+    <div class="row g-4">
+  <div class="col-12 col-md-6 col-lg-3" >
+    <div class="card-deck">
+      <div class="card c1 sCard">
+        <img class="card-img-top" src="..." alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title headline textShort" >Card title</h5>
+          <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+        </div>
+        <div class="card-footer firstPublicationDate">
+          <small class="text-muted">Last updated 3 mins ago</small>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-3" >
+      <div class="card-deck">
+        <div class="card c2 sCard">
+          <img class="card-img-top" src="..." alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title headline textShort">Card title</h5>
+            <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+          </div>
+          <div class="card-footer firstPublicationDate">
+            <small class="text-muted">Last updated 3 mins ago</small>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-3" >
+        <div class="card-deck">
+          <div class="card c3 sCard">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title headline textShort">Card title</h5>
+              <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            </div>
+            <div class="card-footer firstPublicationDate">
+              <small class="text-muted">Last updated 3 mins ago</small>
+            </div>
+          </div>
+        </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3" >
+          <div class="card-deck">
+            <div class="card c4 sCard">
+              <img class="card-img-top" src="..." alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title headline textShort">Card title</h5>
+                <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+              </div>
+              <div class="card-footer firstPublicationDate">
+                <small class="text-muted">Last updated 3 mins ago</small>
+              </div>
+            </div>
+          </div>
+          </div>
+          <div class="container">
+            <hr class="featurette-divider transparentDivider">
+            </div>
+          <div class="col-12 col-md-6 col-lg-3" >
+            <div class="card-deck">
+              <div class="card c5 sCard">
+                <img class="card-img-top" src="..." alt="Card image cap">
+                <div class="card-body ">
+                  <h5 class="card-title headline textShort">Card title</h5>
+                  <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                </div>
+                <div class="card-footer firstPublicationDate">
+                  <small class="text-muted">Last updated 3 mins ago</small>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3" >
+              <div class="card-deck">
+                <div class="card c6 sCard">
+                  <img class="card-img-top" src="..." alt="Card image cap">
+                  <div class="card-body">
+                    <h5 class="card-title headline textShort">Card title</h5>
+                    <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                  </div>
+                  <div class="card-footer firstPublicationDate">
+                    <small class="text-muted">Last updated 3 mins ago</small>
+                  </div>
+                </div>
+              </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-3" >
+                <div class="card-deck">
+                  <div class="card c7 sCard">
+                    <img class="card-img-top" src="..." alt="Card image cap">
+                    <div class="card-body">
+                      <h5 class="card-title headline textShort">Card title</h5>
+                      <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                    </div>
+                    <div class="card-footer firstPublicationDate">
+                      <small class="text-muted">Last updated 3 mins ago</small>
+                    </div>
+                  </div>
+                </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3" >
+                  <div class="card-deck">
+                    <div class="card c8 sCard">
+                      <img class="card-img-top" src="..." alt="Card image cap">
+                      <div class="card-body">
+                        <h5 class="card-title headline textShort">Card title</h5>
+                        <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                      </div>
+                      <div class="card-footer firstPublicationDate">
+                        <small class="text-muted">Last updated 3 mins ago</small>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                  <div class="container">
+                    <hr class="featurette-divider transparentDivider">
+                    </div>
+                  <div class="col-12 col-md-6 col-lg-3" >
+                    <div class="card-deck">
+                      <div class="card c9 sCard">
+                        <img class="card-img-top" src="..." alt="Card image cap">
+                        <div class="card-body ">
+                          <h5 class="card-title headline textShort">Card title</h5>
+                          <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        </div>
+                        <div class="card-footer firstPublicationDate">
+                          <small class="text-muted">Last updated 3 mins ago</small>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-3" >
+                      <div class="card-deck">
+                        <div class="card c10 sCard">
+                          <img class="card-img-top" src="..." alt="Card image cap">
+                          <div class="card-body">
+                            <h5 class="card-title headline textShort">Card title</h5>
+                            <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                          </div>
+                          <div class="card-footer firstPublicationDate">
+                            <small class="text-muted">Last updated 3 mins ago</small>
+                          </div>
+                        </div>
+                      </div>
+                      </div>
+                      <div class="col-12 col-md-6 col-lg-3" >
+                        <div class="card-deck">
+                          <div class="card c11 sCard">
+                            <img class="card-img-top" src="..." alt="Card image cap">
+                            <div class="card-body">
+                              <h5 class="card-title headline textShort">Card title</h5>
+                              <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            </div>
+                            <div class="card-footer firstPublicationDate">
+                              <small class="text-muted">Last updated 3 mins ago</small>
+                            </div>
+                          </div>
+                        </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3" >
+                          <div class="card-deck">
+                            <div class="card c12 sCard">
+                              <img class="card-img-top" src="..." alt="Card image cap">
+                              <div class="card-body">
+                                <h5 class="card-title headline textShort">Card title</h5>
+                                <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                              </div>
+                              <div class="card-footer firstPublicationDate">
+                                <small class="text-muted">Last updated 3 mins ago</small>
+                              </div>
+                            </div>
+                          </div>
+                          </div>
+                          <div class="container">
+                            <hr class="featurette-divider transparentDivider">
+                            </div>
+                          <div class="col-12 col-md-6 col-lg-3" >
+                            <div class="card-deck">
+                              <div class="card c13 sCard">
+                                <img class="card-img-top" src="..." alt="Card image cap">
+                                <div class="card-body ">
+                                  <h5 class="card-title headline textShort">Card title</h5>
+                                  <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                </div>
+                                <div class="card-footer firstPublicationDate">
+                                  <small class="text-muted">Last updated 3 mins ago</small>
+                                </div>
+                              </div>
+                            </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-3" >
+                              <div class="card-deck">
+                                <div class="card c14 sCard">
+                                  <img class="card-img-top" src="..." alt="Card image cap">
+                                  <div class="card-body">
+                                    <h5 class="card-title headline textShort">Card title</h5>
+                                    <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                  </div>
+                                  <div class="card-footer firstPublicationDate">
+                                    <small class="text-muted">Last updated 3 mins ago</small>
+                                  </div>
+                                </div>
+                              </div>
+                              </div>
+                              <div class="col-12 col-md-6 col-lg-3" >
+                                <div class="card-deck">
+                                  <div class="card c15 sCard">
+                                    <img class="card-img-top" src="..." alt="Card image cap">
+                                    <div class="card-body">
+                                      <h5 class="card-title headline textShort">Card title</h5>
+                                      <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                    </div>
+                                    <div class="card-footer firstPublicationDate">
+                                      <small class="text-muted">Last updated 3 mins ago</small>
+                                    </div>
+                                  </div>
+                                </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-3" >
+                                  <div class="card-deck">
+                                    <div class="card c16 sCard">
+                                      <img class="card-img-top" src="..." alt="Card image cap">
+                                      <div class="card-body">
+                                        <h5 class="card-title headline textShort">Card title</h5>
+                                        <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                      </div>
+                                      <div class="card-footer firstPublicationDate">
+                                        <small class="text-muted">Last updated 3 mins ago</small>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  </div>
+  </div>
+
+  
+  </div>
+
+<br>
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      <li class="page-item">
+        <a id="prev" class="page-link" href="#" tabindex="-1">Prev</a>
+      </li>
+      <li class="page-item"><a id="pageNo" class="page-link" href="#">1</a></li>
+  
+      <li class="page-item">
+        <a id="next" class="page-link" href="#">Next</a>
+      </li>
+    </ul>
+  </nav>
+
+</div>
+
+<main>
+<div id="reviews5" style="display:none">
+
+  <div class="container trendingColour">
+    <div class="headline">
+  <h2>5 Star Rating Reviews</h2>
+  </div>
+  </div>
+  
+  <div class="container">
+  <hr class="featurette-divider">
+  </div>
+
+  <br>
+
+  <div class="container">
+    <div class="row g-4">
+  <div class="col-12 col-md-6 col-lg-3" >
+    <div class="card-deck">
+      <div class="card a1 sCard">
+        <img class="card-img-top" src="..." alt="Card image cap">
+        <div class="card-body ">
+          <h5 class="card-title headline textShort">Card title</h5>
+          <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+        </div>
+        <div class="card-footer firstPublicationDate">
+          <small class="text-muted">Last updated 3 mins ago</small>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-3" >
+      <div class="card-deck">
+        <div class="card a2 sCard">
+          <img class="card-img-top" src="..." alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title headline textShort">Card title</h5>
+            <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+          </div>
+          <div class="card-footer firstPublicationDate">
+            <small class="text-muted">Last updated 3 mins ago</small>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-3" >
+        <div class="card-deck">
+          <div class="card a3 sCard">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title headline textShort">Card title</h5>
+              <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            </div>
+            <div class="card-footer firstPublicationDate">
+              <small class="text-muted">Last updated 3 mins ago</small>
+            </div>
+          </div>
+        </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3" >
+          <div class="card-deck">
+            <div class="card a4 sCard">
+              <img class="card-img-top" src="..." alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title headline textShort">Card title</h5>
+                <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+              </div>
+              <div class="card-footer firstPublicationDate">
+                <small class="text-muted">Last updated 3 mins ago</small>
+              </div>
+            </div>
+          </div>
+          </div>
+          <div class="container">
+            <hr class="featurette-divider transparentDivider">
+            </div>
+          <div class="col-12 col-md-6 col-lg-3" >
+            <div class="card-deck">
+              <div class="card a5 sCard">
+                <img class="card-img-top" src="..." alt="Card image cap">
+                <div class="card-body ">
+                  <h5 class="card-title headline textShort">Card title</h5>
+                  <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                </div>
+                <div class="card-footer firstPublicationDate">
+                  <small class="text-muted">Last updated 3 mins ago</small>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3" >
+              <div class="card-deck">
+                <div class="card a6 sCard">
+                  <img class="card-img-top" src="..." alt="Card image cap">
+                  <div class="card-body">
+                    <h5 class="card-title headline textShort">Card title</h5>
+                    <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                  </div>
+                  <div class="card-footer firstPublicationDate">
+                    <small class="text-muted">Last updated 3 mins ago</small>
+                  </div>
+                </div>
+              </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-3" >
+                <div class="card-deck">
+                  <div class="card a7 sCard">
+                    <img class="card-img-top" src="..." alt="Card image cap">
+                    <div class="card-body">
+                      <h5 class="card-title headline textShort">Card title</h5>
+                      <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                    </div>
+                    <div class="card-footer firstPublicationDate">
+                      <small class="text-muted">Last updated 3 mins ago</small>
+                    </div>
+                  </div>
+                </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3" >
+                  <div class="card-deck">
+                    <div class="card a8 sCard">
+                      <img class="card-img-top" src="..." alt="Card image cap">
+                      <div class="card-body">
+                        <h5 class="card-title headline textShort">Card title</h5>
+                        <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                      </div>
+                      <div class="card-footer firstPublicationDate">
+                        <small class="text-muted">Last updated 3 mins ago</small>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                  <div class="container">
+                    <hr class="featurette-divider transparentDivider">
+                    </div>
+                  <div class="col-12 col-md-6 col-lg-3" >
+                    <div class="card-deck">
+                      <div class="card a9 sCard">
+                        <img class="card-img-top" src="..." alt="Card image cap">
+                        <div class="card-body ">
+                          <h5 class="card-title headline textShort">Card title</h5>
+                          <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        </div>
+                        <div class="card-footer firstPublicationDate">
+                          <small class="text-muted">Last updated 3 mins ago</small>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-3" >
+                      <div class="card-deck">
+                        <div class="card a10 sCard">
+                          <img class="card-img-top" src="..." alt="Card image cap">
+                          <div class="card-body">
+                            <h5 class="card-title headline textShort">Card title</h5>
+                            <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                          </div>
+                          <div class="card-footer firstPublicationDate">
+                            <small class="text-muted">Last updated 3 mins ago</small>
+                          </div>
+                        </div>
+                      </div>
+                      </div>
+                      <div class="col-12 col-md-6 col-lg-3" >
+                        <div class="card-deck">
+                          <div class="card a11 sCard">
+                            <img class="card-img-top" src="..." alt="Card image cap">
+                            <div class="card-body">
+                              <h5 class="card-title headline textShort">Card title</h5>
+                              <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            </div>
+                            <div class="card-footer firstPublicationDate">
+                              <small class="text-muted">Last updated 3 mins ago</small>
+                            </div>
+                          </div>
+                        </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3" >
+                          <div class="card-deck">
+                            <div class="card a12 sCard">
+                              <img class="card-img-top" src="..." alt="Card image cap">
+                              <div class="card-body">
+                                <h5 class="card-title headline textShort">Card title</h5>
+                                <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                              </div>
+                              <div class="card-footer firstPublicationDate">
+                                <small class="text-muted">Last updated 3 mins ago</small>
+                              </div>
+                            </div>
+                          </div>
+                          </div>
+                          <div class="container">
+                            <hr class="featurette-divider transparentDivider">
+                            </div>
+                          <div class="col-12 col-md-6 col-lg-3" >
+                            <div class="card-deck">
+                              <div class="card a13 sCard">
+                                <img class="card-img-top" src="..." alt="Card image cap">
+                                <div class="card-body ">
+                                  <h5 class="card-title headline textShort">Card title</h5>
+                                  <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                </div>
+                                <div class="card-footer firstPublicationDate">
+                                  <small class="text-muted">Last updated 3 mins ago</small>
+                                </div>
+                              </div>
+                            </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-3" >
+                              <div class="card-deck">
+                                <div class="card a14 sCard">
+                                  <img class="card-img-top" src="..." alt="Card image cap">
+                                  <div class="card-body">
+                                    <h5 class="card-title headline textShort">Card title</h5>
+                                    <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                  </div>
+                                  <div class="card-footer firstPublicationDate">
+                                    <small class="text-muted">Last updated 3 mins ago</small>
+                                  </div>
+                                </div>
+                              </div>
+                              </div>
+                              <div class="col-12 col-md-6 col-lg-3" >
+                                <div class="card-deck">
+                                  <div class="card a15 sCard">
+                                    <img class="card-img-top" src="..." alt="Card image cap">
+                                    <div class="card-body">
+                                      <h5 class="card-title headline textShort">Card title</h5>
+                                      <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                    </div>
+                                    <div class="card-footer firstPublicationDate">
+                                      <small class="text-muted">Last updated 3 mins ago</small>
+                                    </div>
+                                  </div>
+                                </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-3" >
+                                  <div class="card-deck">
+                                    <div class="card a16 sCard">
+                                      <img class="card-img-top" src="..." alt="Card image cap">
+                                      <div class="card-body">
+                                        <h5 class="card-title headline textShort">Card title</h5>
+                                        <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                      </div>
+                                      <div class="card-footer firstPublicationDate">
+                                        <small class="text-muted">Last updated 3 mins ago</small>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  </div>
+  </div>
+
+<br>
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      <li class="page-item">
+        <a id="prev_Review5" class="page-link" href="#" tabindex="-1">Prev</a>
+      </li>
+      <li class="page-item"><a id="pageNo_Review5" class="page-link" href="#">1</a></li>
+  
+      <li class="page-item">
+        <a id="next_Review5" class="page-link" href="#">Next</a>
+      </li>
+    </ul>
+  </nav>
+
+</div>
+
+</div>
+</main>
+
+<main>
+  <div id="reviews4" style="display:none">
+  
+    <div class="container trendingColour">
+      <div class="headline">
+    <h2>4 Star Rating Reviews</h2>
+    </div>
+    </div>
+    
+    <div class="container">
+    <hr class="featurette-divider">
+    </div>
+  
+    <br>
+  
+    <div class="container">
+      <div class="row g-4">
+    <div class="col-12 col-md-6 col-lg-3" >
+      <div class="card-deck">
+        <div class="card b1 sCard">
+          <img class="card-img-top" src="..." alt="Card image cap">
+          <div class="card-body ">
+            <h5 class="card-title headline textShort">Card title</h5>
+            <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+          </div>
+          <div class="card-footer firstPublicationDate">
+            <small class="text-muted">Last updated 3 mins ago</small>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-3" >
+        <div class="card-deck">
+          <div class="card b2 sCard">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title headline textShort">Card title</h5>
+              <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            </div>
+            <div class="card-footer firstPublicationDate">
+              <small class="text-muted">Last updated 3 mins ago</small>
+            </div>
+          </div>
+        </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3" >
+          <div class="card-deck">
+            <div class="card b3 sCard">
+              <img class="card-img-top" src="..." alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title headline textShort">Card title</h5>
+                <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+              </div>
+              <div class="card-footer firstPublicationDate">
+                <small class="text-muted">Last updated 3 mins ago</small>
+              </div>
+            </div>
+          </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-3" >
+            <div class="card-deck">
+              <div class="card b4 sCard">
+                <img class="card-img-top" src="..." alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title headline textShort">Card title</h5>
+                  <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                </div>
+                <div class="card-footer firstPublicationDate">
+                  <small class="text-muted">Last updated 3 mins ago</small>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="container">
+              <hr class="featurette-divider transparentDivider">
+              </div>
+            <div class="col-12 col-md-6 col-lg-3" >
+              <div class="card-deck">
+                <div class="card b5 sCard">
+                  <img class="card-img-top" src="..." alt="Card image cap">
+                  <div class="card-body ">
+                    <h5 class="card-title headline textShort">Card title</h5>
+                    <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                  </div>
+                  <div class="card-footer firstPublicationDate">
+                    <small class="text-muted">Last updated 3 mins ago</small>
+                  </div>
+                </div>
+              </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-3" >
+                <div class="card-deck">
+                  <div class="card b6 sCard">
+                    <img class="card-img-top" src="..." alt="Card image cap">
+                    <div class="card-body">
+                      <h5 class="card-title headline textShort">Card title</h5>
+                      <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                    </div>
+                    <div class="card-footer firstPublicationDate">
+                      <small class="text-muted">Last updated 3 mins ago</small>
+                    </div>
+                  </div>
+                </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3" >
+                  <div class="card-deck">
+                    <div class="card b7 sCard">
+                      <img class="card-img-top" src="..." alt="Card image cap">
+                      <div class="card-body">
+                        <h5 class="card-title headline textShort">Card title</h5>
+                        <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                      </div>
+                      <div class="card-footer firstPublicationDate">
+                        <small class="text-muted">Last updated 3 mins ago</small>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-3" >
+                    <div class="card-deck">
+                      <div class="card b8 sCard">
+                        <img class="card-img-top" src="..." alt="Card image cap">
+                        <div class="card-body">
+                          <h5 class="card-title headline textShort">Card title</h5>
+                          <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        </div>
+                        <div class="card-footer firstPublicationDate">
+                          <small class="text-muted">Last updated 3 mins ago</small>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                    <div class="container">
+                      <hr class="featurette-divider transparentDivider">
+                      </div>
+                    <div class="col-12 col-md-6 col-lg-3" >
+                      <div class="card-deck">
+                        <div class="card b9 sCard">
+                          <img class="card-img-top" src="..." alt="Card image cap">
+                          <div class="card-body ">
+                            <h5 class="card-title headline textShort">Card title</h5>
+                            <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                          </div>
+                          <div class="card-footer firstPublicationDate">
+                            <small class="text-muted">Last updated 3 mins ago</small>
+                          </div>
+                        </div>
+                      </div>
+                      </div>
+                      <div class="col-12 col-md-6 col-lg-3" >
+                        <div class="card-deck">
+                          <div class="card b10 sCard">
+                            <img class="card-img-top" src="..." alt="Card image cap">
+                            <div class="card-body">
+                              <h5 class="card-title headline textShort">Card title</h5>
+                              <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            </div>
+                            <div class="card-footer firstPublicationDate">
+                              <small class="text-muted">Last updated 3 mins ago</small>
+                            </div>
+                          </div>
+                        </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3" >
+                          <div class="card-deck">
+                            <div class="card b11 sCard">
+                              <img class="card-img-top" src="..." alt="Card image cap">
+                              <div class="card-body">
+                                <h5 class="card-title headline textShort">Card title</h5>
+                                <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                              </div>
+                              <div class="card-footer firstPublicationDate">
+                                <small class="text-muted">Last updated 3 mins ago</small>
+                              </div>
+                            </div>
+                          </div>
+                          </div>
+                          <div class="col-12 col-md-6 col-lg-3" >
+                            <div class="card-deck">
+                              <div class="card b12 sCard">
+                                <img class="card-img-top" src="..." alt="Card image cap">
+                                <div class="card-body">
+                                  <h5 class="card-title headline textShort">Card title</h5>
+                                  <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                </div>
+                                <div class="card-footer firstPublicationDate">
+                                  <small class="text-muted">Last updated 3 mins ago</small>
+                                </div>
+                              </div>
+                            </div>
+                            </div>
+                            <div class="container">
+                              <hr class="featurette-divider transparentDivider">
+                              </div>
+                            <div class="col-12 col-md-6 col-lg-3" >
+                              <div class="card-deck">
+                                <div class="card b13 sCard">
+                                  <img class="card-img-top" src="..." alt="Card image cap">
+                                  <div class="card-body ">
+                                    <h5 class="card-title headline textShort">Card title</h5>
+                                    <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                  </div>
+                                  <div class="card-footer firstPublicationDate">
+                                    <small class="text-muted">Last updated 3 mins ago</small>
+                                  </div>
+                                </div>
+                              </div>
+                              </div>
+                              <div class="col-12 col-md-6 col-lg-3" >
+                                <div class="card-deck">
+                                  <div class="card b14 sCard">
+                                    <img class="card-img-top" src="..." alt="Card image cap">
+                                    <div class="card-body">
+                                      <h5 class="card-title headline textShort">Card title</h5>
+                                      <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                    </div>
+                                    <div class="card-footer firstPublicationDate">
+                                      <small class="text-muted">Last updated 3 mins ago</small>
+                                    </div>
+                                  </div>
+                                </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-3" >
+                                  <div class="card-deck">
+                                    <div class="card b15 sCard">
+                                      <img class="card-img-top" src="..." alt="Card image cap">
+                                      <div class="card-body">
+                                        <h5 class="card-title headline textShort">Card title</h5>
+                                        <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                      </div>
+                                      <div class="card-footer firstPublicationDate">
+                                        <small class="text-muted">Last updated 3 mins ago</small>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  </div>
+                                  <div class="col-12 col-md-6 col-lg-3" >
+                                    <div class="card-deck">
+                                      <div class="card b16 sCard">
+                                        <img class="card-img-top" src="..." alt="Card image cap">
+                                        <div class="card-body">
+                                          <h5 class="card-title headline textShort">Card title</h5>
+                                          <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                        </div>
+                                        <div class="card-footer firstPublicationDate">
+                                          <small class="text-muted">Last updated 3 mins ago</small>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    </div>
+    </div>
+  
+  <br>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <li class="page-item">
+          <a id="prev_Review4" class="page-link" href="#" tabindex="-1">Prev</a>
+        </li>
+        <li class="page-item"><a id="pageNo_Review4" class="page-link" href="#">1</a></li>
+    
+        <li class="page-item">
+          <a id="next_Review4" class="page-link" href="#">Next</a>
+        </li>
+      </ul>
+    </nav>
+  
+  </div>
+  
+  </div>
+  </main>
+
+
+  <main>
+    <div id="reviews3" style="display:none">
+    
+      <div class="container trendingColour">
+        <div class="headline">
+      <h2>3 Star Rating Reviews</h2>
+      </div>
+      </div>
+      
+      <div class="container">
+      <hr class="featurette-divider">
+      </div>
+    
+      <br>
+    
+      <div class="container">
+        <div class="row g-4">
+      <div class="col-12 col-md-6 col-lg-3" >
+        <div class="card-deck">
+          <div class="card d1 sCard">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body ">
+              <h5 class="card-title headline textShort">Card title</h5>
+              <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            </div>
+            <div class="card-footer firstPublicationDate">
+              <small class="text-muted">Last updated 3 mins ago</small>
+            </div>
+          </div>
+        </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3" >
+          <div class="card-deck">
+            <div class="card d2 sCard">
+              <img class="card-img-top" src="..." alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title headline textShort">Card title</h5>
+                <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+              </div>
+              <div class="card-footer firstPublicationDate">
+                <small class="text-muted">Last updated 3 mins ago</small>
+              </div>
+            </div>
+          </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-3" >
+            <div class="card-deck">
+              <div class="card d3 sCard">
+                <img class="card-img-top" src="..." alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title headline textShort">Card title</h5>
+                  <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                </div>
+                <div class="card-footer firstPublicationDate">
+                  <small class="text-muted">Last updated 3 mins ago</small>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3" >
+              <div class="card-deck">
+                <div class="card d4 sCard">
+                  <img class="card-img-top" src="..." alt="Card image cap">
+                  <div class="card-body">
+                    <h5 class="card-title headline textShort">Card title</h5>
+                    <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                  </div>
+                  <div class="card-footer firstPublicationDate">
+                    <small class="text-muted">Last updated 3 mins ago</small>
+                  </div>
+                </div>
+              </div>
+              </div>
+              <div class="container">
+                <hr class="featurette-divider transparentDivider">
+                </div>
+              <div class="col-12 col-md-6 col-lg-3" >
+                <div class="card-deck">
+                  <div class="card d5 sCard">
+                    <img class="card-img-top" src="..." alt="Card image cap">
+                    <div class="card-body ">
+                      <h5 class="card-title headline textShort">Card title</h5>
+                      <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                    </div>
+                    <div class="card-footer firstPublicationDate">
+                      <small class="text-muted">Last updated 3 mins ago</small>
+                    </div>
+                  </div>
+                </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3" >
+                  <div class="card-deck">
+                    <div class="card d6 sCard">
+                      <img class="card-img-top" src="..." alt="Card image cap">
+                      <div class="card-body">
+                        <h5 class="card-title headline textShort">Card title</h5>
+                        <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                      </div>
+                      <div class="card-footer firstPublicationDate">
+                        <small class="text-muted">Last updated 3 mins ago</small>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-3" >
+                    <div class="card-deck">
+                      <div class="card d7 sCard">
+                        <img class="card-img-top" src="..." alt="Card image cap">
+                        <div class="card-body">
+                          <h5 class="card-title headline textShort">Card title</h5>
+                          <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        </div>
+                        <div class="card-footer firstPublicationDate">
+                          <small class="text-muted">Last updated 3 mins ago</small>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-3" >
+                      <div class="card-deck">
+                        <div class="card d8 sCard">
+                          <img class="card-img-top" src="..." alt="Card image cap">
+                          <div class="card-body">
+                            <h5 class="card-title headline textShort">Card title</h5>
+                            <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                          </div>
+                          <div class="card-footer firstPublicationDate">
+                            <small class="text-muted">Last updated 3 mins ago</small>
+                          </div>
+                        </div>
+                      </div>
+                      </div>
+                      <div class="container">
+                        <hr class="featurette-divider transparentDivider">
+                        </div>
+                      <div class="col-12 col-md-6 col-lg-3" >
+                        <div class="card-deck">
+                          <div class="card d9 sCard">
+                            <img class="card-img-top" src="..." alt="Card image cap">
+                            <div class="card-body ">
+                              <h5 class="card-title headline textShort">Card title</h5>
+                              <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            </div>
+                            <div class="card-footer firstPublicationDate">
+                              <small class="text-muted">Last updated 3 mins ago</small>
+                            </div>
+                          </div>
+                        </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3" >
+                          <div class="card-deck">
+                            <div class="card d10 sCard">
+                              <img class="card-img-top" src="..." alt="Card image cap">
+                              <div class="card-body">
+                                <h5 class="card-title headline textShort">Card title</h5>
+                                <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                              </div>
+                              <div class="card-footer firstPublicationDate">
+                                <small class="text-muted">Last updated 3 mins ago</small>
+                              </div>
+                            </div>
+                          </div>
+                          </div>
+                          <div class="col-12 col-md-6 col-lg-3" >
+                            <div class="card-deck">
+                              <div class="card d11 sCard">
+                                <img class="card-img-top" src="..." alt="Card image cap">
+                                <div class="card-body">
+                                  <h5 class="card-title headline textShort">Card title</h5>
+                                  <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                </div>
+                                <div class="card-footer firstPublicationDate">
+                                  <small class="text-muted">Last updated 3 mins ago</small>
+                                </div>
+                              </div>
+                            </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-3" >
+                              <div class="card-deck">
+                                <div class="card d12 sCard">
+                                  <img class="card-img-top" src="..." alt="Card image cap">
+                                  <div class="card-body">
+                                    <h5 class="card-title headline textShort">Card title</h5>
+                                    <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                  </div>
+                                  <div class="card-footer firstPublicationDate">
+                                    <small class="text-muted">Last updated 3 mins ago</small>
+                                  </div>
+                                </div>
+                              </div>
+                              </div>
+                              <div class="container">
+                                <hr class="featurette-divider transparentDivider">
+                                </div>
+                              <div class="col-12 col-md-6 col-lg-3" >
+                                <div class="card-deck">
+                                  <div class="card d13 sCard">
+                                    <img class="card-img-top" src="..." alt="Card image cap">
+                                    <div class="card-body ">
+                                      <h5 class="card-title headline textShort">Card title</h5>
+                                      <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                    </div>
+                                    <div class="card-footer firstPublicationDate">
+                                      <small class="text-muted">Last updated 3 mins ago</small>
+                                    </div>
+                                  </div>
+                                </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-3" >
+                                  <div class="card-deck">
+                                    <div class="card d14 sCard">
+                                      <img class="card-img-top" src="..." alt="Card image cap">
+                                      <div class="card-body">
+                                        <h5 class="card-title headline textShort">Card title</h5>
+                                        <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                      </div>
+                                      <div class="card-footer firstPublicationDate">
+                                        <small class="text-muted">Last updated 3 mins ago</small>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  </div>
+                                  <div class="col-12 col-md-6 col-lg-3" >
+                                    <div class="card-deck">
+                                      <div class="card d15 sCard">
+                                        <img class="card-img-top" src="..." alt="Card image cap">
+                                        <div class="card-body">
+                                          <h5 class="card-title headline textShort">Card title</h5>
+                                          <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                        </div>
+                                        <div class="card-footer firstPublicationDate">
+                                          <small class="text-muted">Last updated 3 mins ago</small>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-3" >
+                                      <div class="card-deck">
+                                        <div class="card d16 sCard">
+                                          <img class="card-img-top" src="..." alt="Card image cap">
+                                          <div class="card-body">
+                                            <h5 class="card-title headline textShort">Card title</h5>
+                                            <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                          </div>
+                                          <div class="card-footer firstPublicationDate">
+                                            <small class="text-muted">Last updated 3 mins ago</small>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      </div>
+      </div>
+    
+    <br>
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item">
+            <a id="prev_Review3" class="page-link" href="#" tabindex="-1">Prev</a>
+          </li>
+          <li class="page-item"><a id="pageNo_Review3" class="page-link" href="#">1</a></li>
+      
+          <li class="page-item">
+            <a id="next_Review3" class="page-link" href="#">Next</a>
+          </li>
+        </ul>
+      </nav>
+    
+    </div>
+    
+    </div>
+    </main>
+
+
+    <main>
+      <div id="reviews2" style="display:none">
+      
+        <div class="container trendingColour">
+          <div class="headline">
+        <h2>2 Star Rating Reviews</h2>
+        </div>
+        </div>
+        
+        <div class="container">
+        <hr class="featurette-divider">
+        </div>
+      
+        <br>
+      
+        <div class="container">
+          <div class="row g-4">
+        <div class="col-12 col-md-6 col-lg-3" >
+          <div class="card-deck">
+            <div class="card e1 sCard">
+              <img class="card-img-top" src="..." alt="Card image cap">
+              <div class="card-body ">
+                <h5 class="card-title headline textShort">Card title</h5>
+                <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+              </div>
+              <div class="card-footer firstPublicationDate">
+                <small class="text-muted">Last updated 3 mins ago</small>
+              </div>
+            </div>
+          </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-3" >
+            <div class="card-deck">
+              <div class="card e2 sCard">
+                <img class="card-img-top" src="..." alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title headline textShort">Card title</h5>
+                  <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                </div>
+                <div class="card-footer firstPublicationDate">
+                  <small class="text-muted">Last updated 3 mins ago</small>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3" >
+              <div class="card-deck">
+                <div class="card e3 sCard">
+                  <img class="card-img-top" src="..." alt="Card image cap">
+                  <div class="card-body">
+                    <h5 class="card-title headline textShort">Card title</h5>
+                    <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                  </div>
+                  <div class="card-footer firstPublicationDate">
+                    <small class="text-muted">Last updated 3 mins ago</small>
+                  </div>
+                </div>
+              </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-3" >
+                <div class="card-deck">
+                  <div class="card e4 sCard">
+                    <img class="card-img-top" src="..." alt="Card image cap">
+                    <div class="card-body">
+                      <h5 class="card-title headline textShort">Card title</h5>
+                      <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                    </div>
+                    <div class="card-footer firstPublicationDate">
+                      <small class="text-muted">Last updated 3 mins ago</small>
+                    </div>
+                  </div>
+                </div>
+                </div>
+                <div class="container">
+                  <hr class="featurette-divider transparentDivider">
+                  </div>
+                <div class="col-12 col-md-6 col-lg-3" >
+                  <div class="card-deck">
+                    <div class="card e5 sCard">
+                      <img class="card-img-top" src="..." alt="Card image cap">
+                      <div class="card-body ">
+                        <h5 class="card-title headline textShort">Card title</h5>
+                        <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                      </div>
+                      <div class="card-footer firstPublicationDate">
+                        <small class="text-muted">Last updated 3 mins ago</small>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-3" >
+                    <div class="card-deck">
+                      <div class="card e6 sCard">
+                        <img class="card-img-top" src="..." alt="Card image cap">
+                        <div class="card-body">
+                          <h5 class="card-title headline textShort">Card title</h5>
+                          <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        </div>
+                        <div class="card-footer firstPublicationDate">
+                          <small class="text-muted">Last updated 3 mins ago</small>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-3" >
+                      <div class="card-deck">
+                        <div class="card e7 sCard">
+                          <img class="card-img-top" src="..." alt="Card image cap">
+                          <div class="card-body">
+                            <h5 class="card-title headline textShort">Card title</h5>
+                            <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                          </div>
+                          <div class="card-footer firstPublicationDate">
+                            <small class="text-muted">Last updated 3 mins ago</small>
+                          </div>
+                        </div>
+                      </div>
+                      </div>
+                      <div class="col-12 col-md-6 col-lg-3" >
+                        <div class="card-deck">
+                          <div class="card e8 sCard">
+                            <img class="card-img-top" src="..." alt="Card image cap">
+                            <div class="card-body">
+                              <h5 class="card-title headline textShort">Card title</h5>
+                              <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            </div>
+                            <div class="card-footer firstPublicationDate">
+                              <small class="text-muted">Last updated 3 mins ago</small>
+                            </div>
+                          </div>
+                        </div>
+                        </div>
+                        <div class="container">
+                          <hr class="featurette-divider transparentDivider">
+                          </div>
+                        <div class="col-12 col-md-6 col-lg-3" >
+                          <div class="card-deck">
+                            <div class="card e9 sCard">
+                              <img class="card-img-top" src="..." alt="Card image cap">
+                              <div class="card-body ">
+                                <h5 class="card-title headline textShort">Card title</h5>
+                                <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                              </div>
+                              <div class="card-footer firstPublicationDate">
+                                <small class="text-muted">Last updated 3 mins ago</small>
+                              </div>
+                            </div>
+                          </div>
+                          </div>
+                          <div class="col-12 col-md-6 col-lg-3" >
+                            <div class="card-deck">
+                              <div class="card e10 sCard">
+                                <img class="card-img-top" src="..." alt="Card image cap">
+                                <div class="card-body">
+                                  <h5 class="card-title headline textShort">Card title</h5>
+                                  <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                </div>
+                                <div class="card-footer firstPublicationDate">
+                                  <small class="text-muted">Last updated 3 mins ago</small>
+                                </div>
+                              </div>
+                            </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-3" >
+                              <div class="card-deck">
+                                <div class="card e11 sCard">
+                                  <img class="card-img-top" src="..." alt="Card image cap">
+                                  <div class="card-body">
+                                    <h5 class="card-title headline textShort">Card title</h5>
+                                    <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                  </div>
+                                  <div class="card-footer firstPublicationDate">
+                                    <small class="text-muted">Last updated 3 mins ago</small>
+                                  </div>
+                                </div>
+                              </div>
+                              </div>
+                              <div class="col-12 col-md-6 col-lg-3" >
+                                <div class="card-deck">
+                                  <div class="card e12 sCard">
+                                    <img class="card-img-top" src="..." alt="Card image cap">
+                                    <div class="card-body">
+                                      <h5 class="card-title headline textShort">Card title</h5>
+                                      <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                    </div>
+                                    <div class="card-footer firstPublicationDate">
+                                      <small class="text-muted">Last updated 3 mins ago</small>
+                                    </div>
+                                  </div>
+                                </div>
+                                </div>
+                                <div class="container">
+                                  <hr class="featurette-divider transparentDivider">
+                                  </div>
+                                <div class="col-12 col-md-6 col-lg-3" >
+                                  <div class="card-deck">
+                                    <div class="card e13 sCard">
+                                      <img class="card-img-top" src="..." alt="Card image cap">
+                                      <div class="card-body ">
+                                        <h5 class="card-title headline textShort">Card title</h5>
+                                        <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                      </div>
+                                      <div class="card-footer firstPublicationDate">
+                                        <small class="text-muted">Last updated 3 mins ago</small>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  </div>
+                                  <div class="col-12 col-md-6 col-lg-3" >
+                                    <div class="card-deck">
+                                      <div class="card e14 sCard">
+                                        <img class="card-img-top" src="..." alt="Card image cap">
+                                        <div class="card-body">
+                                          <h5 class="card-title headline textShort">Card title</h5>
+                                          <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                        </div>
+                                        <div class="card-footer firstPublicationDate">
+                                          <small class="text-muted">Last updated 3 mins ago</small>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-3" >
+                                      <div class="card-deck">
+                                        <div class="card e15 sCard">
+                                          <img class="card-img-top" src="..." alt="Card image cap">
+                                          <div class="card-body">
+                                            <h5 class="card-title headline textShort">Card title</h5>
+                                            <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                          </div>
+                                          <div class="card-footer firstPublicationDate">
+                                            <small class="text-muted">Last updated 3 mins ago</small>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      </div>
+                                      <div class="col-12 col-md-6 col-lg-3" >
+                                        <div class="card-deck">
+                                          <div class="card e16 sCard">
+                                            <img class="card-img-top" src="..." alt="Card image cap">
+                                            <div class="card-body">
+                                              <h5 class="card-title headline textShort">Card title</h5>
+                                              <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                            </div>
+                                            <div class="card-footer firstPublicationDate">
+                                              <small class="text-muted">Last updated 3 mins ago</small>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        </div>
+        </div>
+      
+      <br>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center">
+            <li class="page-item">
+              <a id="prev_Review2" class="page-link" href="#" tabindex="-1">Prev</a>
+            </li>
+            <li class="page-item"><a id="pageNo_Review2" class="page-link" href="#">1</a></li>
+        
+            <li class="page-item">
+              <a id="next_Review2" class="page-link" href="#">Next</a>
+            </li>
+          </ul>
+        </nav>
+      
+      </div>
+      
+      </div>
+      </main>
+
+
+
+      <main>
+        <div id="reviews1" style="display:none">
+        
+          <div class="container trendingColour">
+            <div class="headline">
+          <h2>1 Star Rating Reviews</h2>
+          </div>
+          </div>
+          
+          <div class="container">
+          <hr class="featurette-divider">
+          </div>
+        
+          <br>
+        
+          <div class="container">
+            <div class="row g-4">
+          <div class="col-12 col-md-6 col-lg-3" >
+            <div class="card-deck">
+              <div class="card f1 sCard">
+                <img class="card-img-top" src="..." alt="Card image cap">
+                <div class="card-body ">
+                  <h5 class="card-title headline textShort">Card title</h5>
+                  <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                </div>
+                <div class="card-footer firstPublicationDate">
+                  <small class="text-muted">Last updated 3 mins ago</small>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3" >
+              <div class="card-deck">
+                <div class="card f2 sCard">
+                  <img class="card-img-top" src="..." alt="Card image cap">
+                  <div class="card-body">
+                    <h5 class="card-title headline textShort">Card title</h5>
+                    <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                  </div>
+                  <div class="card-footer firstPublicationDate">
+                    <small class="text-muted">Last updated 3 mins ago</small>
+                  </div>
+                </div>
+              </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-3" >
+                <div class="card-deck">
+                  <div class="card f3 sCard">
+                    <img class="card-img-top" src="..." alt="Card image cap">
+                    <div class="card-body">
+                      <h5 class="card-title headline textShort">Card title</h5>
+                      <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                    </div>
+                    <div class="card-footer firstPublicationDate">
+                      <small class="text-muted">Last updated 3 mins ago</small>
+                    </div>
+                  </div>
+                </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3" >
+                  <div class="card-deck">
+                    <div class="card f4 sCard">
+                      <img class="card-img-top" src="..." alt="Card image cap">
+                      <div class="card-body">
+                        <h5 class="card-title headline textShort">Card title</h5>
+                        <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                      </div>
+                      <div class="card-footer firstPublicationDate">
+                        <small class="text-muted">Last updated 3 mins ago</small>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                  <div class="container">
+                    <hr class="featurette-divider transparentDivider">
+                    </div>
+                  <div class="col-12 col-md-6 col-lg-3" >
+                    <div class="card-deck">
+                      <div class="card f5 sCard">
+                        <img class="card-img-top" src="..." alt="Card image cap">
+                        <div class="card-body ">
+                          <h5 class="card-title headline textShort">Card title</h5>
+                          <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        </div>
+                        <div class="card-footer firstPublicationDate">
+                          <small class="text-muted">Last updated 3 mins ago</small>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-3" >
+                      <div class="card-deck">
+                        <div class="card f6 sCard">
+                          <img class="card-img-top" src="..." alt="Card image cap">
+                          <div class="card-body">
+                            <h5 class="card-title headline textShort">Card title</h5>
+                            <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                          </div>
+                          <div class="card-footer firstPublicationDate">
+                            <small class="text-muted">Last updated 3 mins ago</small>
+                          </div>
+                        </div>
+                      </div>
+                      </div>
+          </div>
+          
+        
+        <br>
+          <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+              <li class="page-item">
+                <a id="prev" class="page-link" href="#" tabindex="-1">Prev</a>
+              </li>
+              <li class="page-item"><a id="pageNo" class="page-link" href="#">1</a></li>
+          
+              <li class="page-item">
+                <a id="next" class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
+        
+        </div>
+        
+        </div>
+        </main>
+
+
+
+<main class="mt-1 mb-4">
+  <div id="article" class="container" style="display:none">
+    <!--Grid row-->
+    <div class="row">
+      <!--Grid column-->
+      <div class="col-md-8 mb-4">
+        <!--Section: Post data-mdb-->
+        <section class="border-bottom mb-4">
+          <img class="card-img-top" src="..."
+            class="img-fluid shadow-2-strong rounded mb-4" alt="" />
+          <div class="row align-items-center mb-3 mt-3">
+            <h1 class="card-title headline headColour textStyle">Card title</h1>
+        <h5 class="card-text trailText articleFont textStyle publisherStyle mb-4">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</h5>
+            <div class="col-lg-7 text-center text-lg-start mb-3 m-lg-0 text-white">
+              <span class="textStyle publisherStyle"> Published <span class="firstPublicationDate trendingColour">Date</span> by</span>
+              <span class="byline textStyle trendingColour">Author Name</span>
+            </div>
+          </div>
+        </section>
+        <!--Section: Post data-mdb-->
+
+        <!--Section: Text-->
+          <p class="card-text bodyText borderSize">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      </div>
+                    <!--Grid column-->
+                    <div class="col-md-4 mb-4" id="latest">
+                      <!--Section: Sidebar-->
+                      <section>
+                        <div class="px-3 mb-3 rounded">
+                          <h5 class="fst-italic orangeText ">Details & References</h5>
+                          <p class="mb-0 white">Last Modified: <span class="lastModified white bold">Date Modified</span></p>
+                          <br>
+                          <p class="mb-0 white">Star Rating: <span class="starRating white bold">Star Rating</span></p>
+                          <br>
+                          <p class="mb-0 white">Publication: <span class="publication white bold">Publication</span></p>
+                          <br>
+                          <p class="mb-0 white">Production Office: <span class="productionOffice white bold">Production Office</span></p>
+                          <br>
+                          <p class="mb-0 white">Wordcount: <span class="wordcount white bold">Wordcount</span></p>
+                          <br>
+                          <p class="mb-0 white">Short URL: <span class="shortUrl white bold">Short URL</span></p>
+                          <br>
+                          <p class="mb-0 white">Extra Information: <span class="standfirst white bold">Extra Information</span></p>
+                        </div>
+                      </section>
+                    </div>
+    </div>
+  </div>
+
+
+  <div class="container"style="display:none" id="latestArticle">
+    <div class="headline trendingColour">
+  <h4>Latest News</h4>
+
+  <div class="">
+    <hr class="featurette-divider">
+  
+    <br>
+  
+  <div class=""  >
+    <div class="row g-4">
+  <div class="col-12 col-md-6 col-lg-3" >
+    <div class="card-deck">
+      <div class="card c1 sCard">
+        <img class="card-img-top" src="..." alt="Card image cap">
+        <div class="card-body ">
+          <h5 class="card-title headline textShort">Card title</h5>
+          <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+        </div>
+        <div class="card-footer firstPublicationDate">
+          <small class="text-muted">Last updated 3 mins ago</small>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-3" >
+      <div class="card-deck">
+        <div class="card c2 sCard">
+          <img class="card-img-top" src="..." alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title headline textShort">Card title</h5>
+            <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+          </div>
+          <div class="card-footer firstPublicationDate">
+            <small class="text-muted">Last updated 3 mins ago</small>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-3" >
+        <div class="card-deck">
+          <div class="card c3 sCard">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title headline textShort">Card title</h5>
+              <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            </div>
+            <div class="card-footer firstPublicationDate">
+              <small class="text-muted">Last updated 3 mins ago</small>
+            </div>
+          </div>
+        </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3" >
+          <div class="card-deck">
+            <div class="card c4 sCard">
+              <img class="card-img-top" src="..." alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title headline textShort">Card title</h5>
+                <p class="card-text trailText textShort">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+              </div>
+              <div class="card-footer firstPublicationDate">
+                <small class="text-muted">Last updated 3 mins ago</small>
+              </div>
+            </div>
+          </div>
+          </div>
+  </div>
+  </div>
+</main>
+
+<br>
+
+</div>
+
+
+
+<div class="footer">
+<div class="container">
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 ">
+    <p class="col-md-4 mb-0 trendingColour ms-lg-3">© 2022 Inc</p>
+  <!-- 
+    <a href="index.html" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto">
+      <img class="bi me-4" width="87" height="32" src="images/logo_white.png" ></img>
+    </a>
+    -->
+    <form action="" class="color-picker me-lg-3">
+      <fieldset>
+          <label for="blue" class="visually-hidden">Blue</label>
+          <input type="radio" name="theme" id="blue" onclick="changeImage2();" checked>
+
+          <label for="dark" class="visually-hidden ">Dark Mode</label>
+          <input type="radio" name="theme" id="dark" onclick="changeImage2();">
+
+          <label for="light" class="visually-hidden">Light Mode</label>
+          <input type="radio" name="theme" id="light" onclick="changeImage();">
+      </fieldset>
+    </form>
+  </footer>
+  
+</div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+
+
+<script>
+
+const colorThemes = document.querySelectorAll('[name="theme"]');
+
+const storeTheme = function (theme) {
+  localStorage.setItem("theme", theme);
+};
+
+const retrieveTheme = function() {
+  const activeTheme = localStorage.getItem("theme");
+  colorThemes.forEach((themeOption) => {
+    if (themeOption.id === activeTheme) {
+      themeOption.checked = true;
+    }
+  });
+};
+
+colorThemes.forEach((themeOption) => {
+  themeOption.addEventListener("click", () => {
+    storeTheme(themeOption.id);
+  });
+});
+
+
+const logoColour = document.querySelectorAll('[name="logo"]');
+
+const storeLogo = function (logo) {
+  localStorage.setItem("logo", logo);
+};
+
+const retrieveLogo = function() {
+  const activeLogo = localStorage.getItem("logo");
+  logoColour.forEach((logoOption) => {
+    if (logoOption.id === activeLogo) {
+      logoOption.checked = true;
+    }
+  });
+};
+
+logoColour.forEach((logoOption) => {
+  logoOption.addEventListener("click", () => {
+    storeTheme(logoOption.id);
+  });
+});
+
+document.onload = retrieveTheme();
+document.onload = retrieveLogo();
+
+
+</script>
+
+
+
+
+
+</body>
+</html>

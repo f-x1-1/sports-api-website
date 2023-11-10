@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+	var page=1;
+function getContent(pageDirection){
+if (pageDirection=="next"){
+page++;
+$('#pageNo').html( page);
+}
+	        $.getJSON({
+            url: "https://content.guardianapis.com/search?page-size=3&show-fields=all&api-key=8193cdac-7310-49a5-9703-27ae3248d318&page=" + page + "&section=football", 
+            error: function(xhr){console.log("An error occured: " + xhr.status + " " + xhr.statusText);},
+            success:function(data){
+              var results = data.response.results;
+				$('.c1 .card-img-top').attr("src", results[0].fields.thumbnail);
+				$('.c1 .headline').html( results[0].fields.headline);
+				$('.c1 .trailText').html(results[0].fields.trailText);
+				$('.c1 .firstPublicationDate').html(results[0].fields.firstPublicationDate);
+				
+				$('.c2 .card-img-top').attr("src", results[1].fields.thumbnail);
+				$('.c2 .headline').html( results[1].fields.headline);
+				$('.c2 .trailText').html(results[1].fields.trailText);
+				$('.c2 .firstPublicationDate').html(results[1].fields.firstPublicationDate);
+				
+				$('.c3 .card-img-top').attr("src", results[2].fields.thumbnail);
+				$('.c3 .headline').html( results[2].fields.headline);
+				$('.c3 .trailText').html(results[2].fields.trailText);
+				$('.c3 .firstPublicationDate').html(results[2].fields.firstPublicationDate);
+            }
+			  
+           });
+		}
+		
+$(document).ready(function(){
+
+getContent("");
+$("#next").click(function(){
+ getContent("next");
+});
+        });
+    </script>
+    <title>
+      Example 1
+    </title>
+  </head>
+  <body>
+<div class="card-group">
+  <div class="card c1" style="padding:10px;">
+    <img class="card-img-top" src="..." alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title headline">Card title</h5>
+      <p class="card-text trailText">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      <p class="card-text"><small class="text-muted firstPublicationDate">Last updated 3 mins ago</small></p>
+    </div>
+  </div>
+  <div class="card c2"  style="padding:10px;">
+    <img class="card-img-top" src="..." alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title headline">Card title</h5>
+      <p class="card-text trailText">This card has supporting text below as a natural lead-in to additional content.</p>
+      <p class="card-text"><small class="text-muted firstPublicationDate">Last updated 3 mins ago</small></p>
+    </div>
+  </div>
+  <div class="card c3" style="padding:10px;">
+    <img class="card-img-top" src="..." alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title headline">Card title</h5>
+      <p class="card-text trailText">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+      <p class="card-text"><small class="text-muted firstPublicationDate">Last updated 3 mins ago</small></p>
+    </div>
+  </div>
+</div>
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    <li class="page-item disabled">
+      <a id="prev" class="page-link" href="#" tabindex="-1">Previous</a>
+    </li>
+    <li class="page-item"><a id="pageNo" class="page-link" href="#">1</a></li>
+
+    <li class="page-item">
+      <a id="next" class="page-link" href="#">Next</a>
+    </li>
+  </ul>
+</nav>
+  </body>
+</html>
